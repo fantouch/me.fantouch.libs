@@ -34,16 +34,12 @@ public class TestUpdateHelperActivity extends Activity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.updateHelperNormalUpdateBtn:
-                checkUpdate(false);
-                break;
-            case R.id.updateHelperForceUpdateBtn:
-                checkUpdate(true);
-                break;
-
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.updateHelperNormalUpdateBtn) {
+            checkUpdate(false);
+        } else if (id == R.id.updateHelperForceUpdateBtn) {
+            checkUpdate(true);
+        } else {
         }
     }
 

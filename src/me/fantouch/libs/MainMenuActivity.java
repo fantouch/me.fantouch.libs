@@ -18,13 +18,10 @@ public class MainMenuActivity extends Activity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.updateHelperLib:
-                startActivity(new Intent(this, TestUpdateHelperActivity.class));
-                break;
-
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.updateHelperLib) {
+            startActivity(new Intent(this, TestUpdateHelperActivity.class));
+        } else {
         }
 
     }
