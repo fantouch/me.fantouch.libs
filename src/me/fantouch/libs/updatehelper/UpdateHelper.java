@@ -185,49 +185,37 @@ public class UpdateHelper {
 
     private void downApk(UpdateInfoBean bean) {
         if (SDCardHelper.hasSD()) {
-            // e.g
-            // http://wz.ue189.cn/filedownload?showname=1&filename=wzchannel_v2.9_build11_ue.apk
-            String folderPath = SDCardHelper.getSDPath() + File.separator
-                    + mPackageHelper.getPackageName();
-            File file = new File(folderPath, mPackageHelper.getPackageName() + "_" + bean.getVersionName() + "_"
-                    + bean.getVersionCode() + ".apk");
-            
-            if (file.exists()) {// 如果存在旧文件,删除之
-                file.delete();
-            }else{
-                new File(folderPath).mkdirs();// 如果文件不存在,可能需要创建必要的文件夹
-            }
-
-            new FinalHttp().download(bean.getDownUrl(), file.getAbsolutePath(), new AjaxCallBack<File>() {
-                @Override
-                public void onLoading(long count, long current) {
-                    float percent = (float) current / count * 100;
-                    refreshProgress(percent);
-                }
-
-                @Override
-                public void onSuccess(File file) {
-                    mNotificationHelper.getNotificationManager().notify(1,
-                            mNotificationHelper.getDownFinishedNotification(file));
-                    Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(Throwable t, String strMsg) {
-                    if (t != null || strMsg != null) {
-                        StringBuffer sb = new StringBuffer("下载失败");
-                        if (strMsg != null) {
-                            sb.append(strMsg);
-                            Toast.makeText(mActivity, sb, Toast.LENGTH_SHORT).show();
-                            Log.e(TAG, "downApk$onFailure() : " + strMsg);
+            new FinalHttp().download(bean.getDownUrl(),
+                    SDCardHelper.getFilePath(mPackageHelper, bean), new AjaxCallBack<File>() {
+                        @Override
+                        public void onLoading(long count, long current) {
+                            float percent = (float) current / count * 100;
+                            refreshProgress(percent);
                         }
 
-                        if (t != null) {
-                            t.printStackTrace();
+                        @Override
+                        public void onSuccess(File file) {
+                            mNotificationHelper.getNotificationManager().notify(1,
+                                    mNotificationHelper.getDownFinishedNotification(file));
+                            Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                }
-            });
+
+                        @Override
+                        public void onFailure(Throwable t, String strMsg) {
+                            if (t != null || strMsg != null) {
+                                StringBuffer sb = new StringBuffer("下载失败");
+                                if (strMsg != null) {
+                                    sb.append(strMsg);
+                                    Toast.makeText(mActivity, sb, Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "downApk$onFailure() : " + strMsg);
+                                }
+
+                                if (t != null) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        }
+                    });
         } else {
             Toast.makeText(mActivity, "SD卡不可用,无法下载", Toast.LENGTH_SHORT).show();
         }
