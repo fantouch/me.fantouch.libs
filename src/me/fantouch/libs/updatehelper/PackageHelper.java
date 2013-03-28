@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public class PackageHelper {
+class PackageHelper {
     private PackageInfo info = null;
     private PackageManager pm;
 

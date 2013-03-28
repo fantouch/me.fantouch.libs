@@ -3,7 +3,7 @@ package me.fantouch.libs.updatehelper;
 
 import android.os.Environment;
 
-public class SDCardHelper {
+class SDCardHelper {
 
     public static boolean hasSD() {
         String state = Environment.getExternalStorageState();
