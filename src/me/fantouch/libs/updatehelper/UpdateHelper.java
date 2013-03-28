@@ -12,9 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import me.fantouch.libs.R;
+import me.fantouch.libs.updatehelper.UpdateListener.ForceUpdateListener;
+import me.fantouch.libs.updatehelper.UpdateListener.NormalUpdateListener;
 
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.HttpHandler;
 
 import java.io.File;
 import java.security.InvalidParameterException;
@@ -22,7 +25,6 @@ import java.security.InvalidParameterException;
 public class UpdateHelper {
     private final String TAG = UpdateHelper.class.getSimpleName();
 
-    private boolean isForceUpdate;
     private Activity mActivity;
     private PackageHelper mPackageHelper;
     private AbsUpdateInfoParser mParser;
@@ -30,14 +32,13 @@ public class UpdateHelper {
     private UpdateListener mUpdateListener;
 
     /**
-     * @param isForceUpdate 是否强制更新,true则{@link UpdateListener#onDecline()}能被回调,false则
-     *            {@link UpdateListener#onCancel()}能被回调
+     * 强制更新
      * @param activity
      * @param parser
      * @param listener
      */
-    public UpdateHelper(boolean isForceUpdate, Activity activity, AbsUpdateInfoParser parser,
-            UpdateListener listener) {
+    public UpdateHelper(Activity activity, AbsUpdateInfoParser parser,
+            ForceUpdateListener listener) {
         if (activity == null) {
             throw new InvalidParameterException("Param Activity can not be null");
         }
@@ -51,7 +52,31 @@ public class UpdateHelper {
         mParser = parser;
         mActivity = activity;
         mUpdateListener = listener;
-        this.isForceUpdate = isForceUpdate;
+        mPackageHelper = new PackageHelper(activity);
+        mNotificationHelper = new NotificationHelper(activity, mPackageHelper);
+    }
+    
+    /**
+     * 普通更新
+     * @param activity
+     * @param parser
+     * @param listener
+     */
+    public UpdateHelper(Activity activity, AbsUpdateInfoParser parser,
+            NormalUpdateListener listener) {
+        if (activity == null) {
+            throw new InvalidParameterException("Param Activity can not be null");
+        }
+        if (parser == null) {
+            throw new InvalidParameterException("Param AbsUpdateInfoParser can not be null");
+        }
+        if (listener == null) {
+            throw new InvalidParameterException("Param UpdateListener can not be null");
+        }
+        
+        mParser = parser;
+        mActivity = activity;
+        mUpdateListener = listener;
         mPackageHelper = new PackageHelper(activity);
         mNotificationHelper = new NotificationHelper(activity, mPackageHelper);
     }
@@ -65,7 +90,7 @@ public class UpdateHelper {
         new FinalHttp().get(url, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
-                mUpdateListener.onStartCheck();
+                mUpdateListener.onCheckStart();
             }
 
             @Override
@@ -107,20 +132,24 @@ public class UpdateHelper {
         DialogInterface.OnClickListener positiveBtnLsnr = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mUpdateListener.onStartDownload();
+                mUpdateListener.onDownloadStart();
                 downApk(bean);
             }
         };
         DialogInterface.OnClickListener negativeBtnLsnr = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mUpdateListener.onDecline();
+                if(mUpdateListener instanceof ForceUpdateListener){
+                    ((ForceUpdateListener) mUpdateListener).onDecline();
+                }
             }
         };
         DialogInterface.OnClickListener neutralBtnLsnr = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mUpdateListener.onCancel();
+                if(mUpdateListener instanceof NormalUpdateListener){
+                    ((NormalUpdateListener) mUpdateListener).onCancel();
+                }
             }
         };
 
@@ -130,9 +159,9 @@ public class UpdateHelper {
         builder.setTitle("发现新版本");
         builder.setMessage("是否下载?");
         builder.setPositiveButton("下载", positiveBtnLsnr);
-        if (isForceUpdate) {
+        if (mUpdateListener instanceof ForceUpdateListener) {
             builder.setNegativeButton("不更新", negativeBtnLsnr);
-        } else {
+        } else if(mUpdateListener instanceof NormalUpdateListener){
             builder.setNeutralButton("下次再说", neutralBtnLsnr);
         }
         builder.setCancelable(false);
@@ -158,17 +187,18 @@ public class UpdateHelper {
         if (SDCardHelper.hasSD()) {
             // e.g
             // http://wz.ue189.cn/filedownload?showname=1&filename=wzchannel_v2.9_build11_ue.apk
-            String filePath = SDCardHelper.getSDPath() + File.separator
-                    + mPackageHelper.getPackageName() + File.separator
-                    + mPackageHelper.getPackageName() + "_" + bean.getVersionName() + "_"
-                    + bean.getVersionCode() + ".apk";
-            // 删除旧文件
-            File oldFile = new File(filePath);
-            if (oldFile.exists()) {
-                oldFile.delete();
+            String folderPath = SDCardHelper.getSDPath() + File.separator
+                    + mPackageHelper.getPackageName();
+            File file = new File(folderPath, mPackageHelper.getPackageName() + "_" + bean.getVersionName() + "_"
+                    + bean.getVersionCode() + ".apk");
+            
+            if (file.exists()) {// 如果存在旧文件,删除之
+                file.delete();
+            }else{
+                new File(folderPath).mkdirs();// 如果文件不存在,可能需要创建必要的文件夹
             }
 
-            new FinalHttp().download(bean.getDownUrl(), filePath, new AjaxCallBack<File>() {
+            new FinalHttp().download(bean.getDownUrl(), file.getAbsolutePath(), new AjaxCallBack<File>() {
                 @Override
                 public void onLoading(long count, long current) {
                     float percent = (float) current / count * 100;

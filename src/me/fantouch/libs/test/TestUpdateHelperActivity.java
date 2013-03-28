@@ -12,6 +12,8 @@ import me.fantouch.libs.updatehelper.AbsUpdateInfoParser;
 import me.fantouch.libs.updatehelper.UpdateHelper;
 import me.fantouch.libs.updatehelper.UpdateInfoBean;
 import me.fantouch.libs.updatehelper.UpdateListener;
+import me.fantouch.libs.updatehelper.UpdateListener.ForceUpdateListener;
+import me.fantouch.libs.updatehelper.UpdateListener.NormalUpdateListener;
 
 import org.json.JSONObject;
 
@@ -24,6 +26,10 @@ import org.json.JSONObject;
  * @author Fantouch
  */
 public class TestUpdateHelperActivity extends Activity {
+    private final static String URL_HOST = "http://wz.ue189.cn/";
+    private final static String URL_CHK_UPDATE = URL_HOST
+            + "http://wz.ue189.cn/android-version.action";
+
     private TextView tv;
 
     @Override
@@ -33,20 +39,11 @@ public class TestUpdateHelperActivity extends Activity {
         tv = (TextView) findViewById(R.id.updateHelperTextView);
     }
 
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.updateHelperNormalUpdateBtn) {
-            checkUpdate(false);
-        } else if (id == R.id.updateHelperForceUpdateBtn) {
-            checkUpdate(true);
-        } else {
-        }
-    }
-
-    private void checkUpdate(boolean isForceUpdate) {
-        final String URL_HOST = "http://wz.ue189.cn/";
-        final String URL_CHK_UPDATE = URL_HOST + "http://wz.ue189.cn/android-version.action";
-        new UpdateHelper(isForceUpdate, this, new AbsUpdateInfoParser() {
+    public void onClick(View button) {
+        /**
+         * 根据实际情况解析更新信息
+         */
+        AbsUpdateInfoParser infoParser = new AbsUpdateInfoParser() {
             @Override
             public UpdateInfoBean parse(String info) {
                 UpdateInfoBean infoBean = new UpdateInfoBean();
@@ -66,14 +63,19 @@ public class TestUpdateHelperActivity extends Activity {
                 }
                 return infoBean;
             }
-        }, new UpdateListener() {
+        };
+
+        /**
+         * 普通检查更新结果监听器
+         */
+        NormalUpdateListener normalUpdateListener = new NormalUpdateListener() {
             @Override
-            public void onStartCheck() {
+            public void onCheckStart() {
                 tv.append("开始检查...\n");
             }
 
             @Override
-            public void onStartDownload() {
+            public void onDownloadStart() {
                 tv.append("开始下载...\n");
             }
 
@@ -86,6 +88,26 @@ public class TestUpdateHelperActivity extends Activity {
             public void onCancel() {
                 tv.append("下次再说.\n");
             }
+        };
+        
+        /**
+         * 普通检查更新结果监听器
+         */
+        ForceUpdateListener forceUpdateListener = new ForceUpdateListener() {
+            @Override
+            public void onCheckStart() {
+                tv.append("开始检查...\n");
+            }
+
+            @Override
+            public void onDownloadStart() {
+                tv.append("开始下载...\n");
+            }
+
+            @Override
+            public void onCheckFinish() {
+                tv.append("没找到新版本.\n");
+            }
 
             @Override
             public void onDecline() {
@@ -97,8 +119,20 @@ public class TestUpdateHelperActivity extends Activity {
                     }
                 }, 2000);
             }
+        };
 
-        }).check(URL_CHK_UPDATE);
+        if (button.getId() == R.id.updateHelperNormalUpdateBtn) {
+            normalUpdate(infoParser, normalUpdateListener);
+        } else if (button.getId() == R.id.updateHelperForceUpdateBtn) {
+            forceUpdate(infoParser, forceUpdateListener);
+        }
     }
 
+    private void normalUpdate(AbsUpdateInfoParser parser, NormalUpdateListener listener) {
+        new UpdateHelper(this, parser, listener).check(URL_CHK_UPDATE);
+    }
+
+    private void forceUpdate(AbsUpdateInfoParser parser, ForceUpdateListener listener) {
+        new UpdateHelper(this, parser, listener).check(URL_CHK_UPDATE);
+    }
 }
