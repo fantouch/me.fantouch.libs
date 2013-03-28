@@ -17,7 +17,6 @@ import me.fantouch.libs.updatehelper.UpdateListener.NormalUpdateListener;
 
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.HttpHandler;
 
 import java.io.File;
 import java.security.InvalidParameterException;
@@ -39,15 +38,12 @@ public class UpdateHelper {
      */
     public UpdateHelper(Activity activity, AbsUpdateInfoParser parser,
             ForceUpdateListener listener) {
-        if (activity == null) {
+        if (activity == null)
             throw new InvalidParameterException("Param Activity can not be null");
-        }
-        if (parser == null) {
+        if (parser == null)
             throw new InvalidParameterException("Param AbsUpdateInfoParser can not be null");
-        }
-        if (listener == null) {
+        if (listener == null)
             throw new InvalidParameterException("Param UpdateListener can not be null");
-        }
 
         mParser = parser;
         mActivity = activity;
@@ -55,7 +51,7 @@ public class UpdateHelper {
         mPackageHelper = new PackageHelper(activity);
         mNotificationHelper = new NotificationHelper(activity, mPackageHelper);
     }
-    
+
     /**
      * 普通更新
      * @param activity
@@ -64,16 +60,13 @@ public class UpdateHelper {
      */
     public UpdateHelper(Activity activity, AbsUpdateInfoParser parser,
             NormalUpdateListener listener) {
-        if (activity == null) {
+        if (activity == null)
             throw new InvalidParameterException("Param Activity can not be null");
-        }
-        if (parser == null) {
+        if (parser == null)
             throw new InvalidParameterException("Param AbsUpdateInfoParser can not be null");
-        }
-        if (listener == null) {
+        if (listener == null)
             throw new InvalidParameterException("Param UpdateListener can not be null");
-        }
-        
+
         mParser = parser;
         mActivity = activity;
         mUpdateListener = listener;
@@ -187,48 +180,35 @@ public class UpdateHelper {
         if (SDCardHelper.hasSD()) {
             new FinalHttp().download(bean.getDownUrl(),
                     SDCardHelper.getFilePath(mPackageHelper, bean), new AjaxCallBack<File>() {
-                        @Override
-                        public void onLoading(long count, long current) {
-                            float percent = (float) current / count * 100;
-                            refreshProgress(percent);
+                @Override
+                public void onLoading(long count, long current) {
+                    float percent = (float) current / count * 100;
+                    mNotificationHelper.refreshProgress(percent);
+                }
+
+                @Override
+                public void onSuccess(File file) {
+                            mNotificationHelper.notifyDownloadFinish(file);
+                }
+
+                @Override
+                public void onFailure(Throwable t, String strMsg) {
+                    if (t != null || strMsg != null) {
+                        StringBuffer sb = new StringBuffer("下载失败");
+                        if (strMsg != null) {
+                            sb.append(strMsg);
+                            Toast.makeText(mActivity, sb, Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, "downApk$onFailure() : " + strMsg);
                         }
 
-                        @Override
-                        public void onSuccess(File file) {
-                            mNotificationHelper.getNotificationManager().notify(1,
-                                    mNotificationHelper.getDownFinishedNotification(file));
-                            Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
+                        if (t != null) {
+                            t.printStackTrace();
                         }
-
-                        @Override
-                        public void onFailure(Throwable t, String strMsg) {
-                            if (t != null || strMsg != null) {
-                                StringBuffer sb = new StringBuffer("下载失败");
-                                if (strMsg != null) {
-                                    sb.append(strMsg);
-                                    Toast.makeText(mActivity, sb, Toast.LENGTH_SHORT).show();
-                                    Log.e(TAG, "downApk$onFailure() : " + strMsg);
-                                }
-
-                                if (t != null) {
-                                    t.printStackTrace();
-                                }
-                            }
-                        }
-                    });
+                    }
+                }
+            });
         } else {
             Toast.makeText(mActivity, "SD卡不可用,无法下载", Toast.LENGTH_SHORT).show();
         }
     }
-
-    private void refreshProgress(final float percent) {
-        mNotificationHelper.getNotificationManager().notify(1,
-                mNotificationHelper.getDownProgressNotification());
-        mNotificationHelper.getRemoteViews().setProgressBar(
-                R.id.updatehelper_notification_progress_pb, 100, (int) percent, false);
-        mNotificationHelper.getRemoteViews()
-                .setTextViewText(R.id.updatehelper_notification_progress_tv,
-                        String.format("%.1f", percent));
-    }
-
 }

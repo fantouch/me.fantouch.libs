@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import me.fantouch.libs.R;
 
@@ -26,27 +27,24 @@ class NotificationHelper {
         mPackageHelper = packageHelper;
         mContextNotificationManager = (NotificationManager) ctx
                 .getSystemService(Context.NOTIFICATION_SERVICE);
+        initDownProgrNotif();
     }
 
-    public Notification getDownProgressNotification() {
-        if (mDownProgrNotif == null) {
-            mDownProgrNotif = new Notification();
-            mDownProgrNotif.icon = android.R.drawable.stat_sys_download;
-            mDownProgrNotif.flags |= Notification.FLAG_AUTO_CANCEL;
+    private void initDownProgrNotif() {
+        mDownProgrNotif = new Notification();
+        mDownProgrNotif.icon = android.R.drawable.stat_sys_download;
+        mDownProgrNotif.flags |= Notification.FLAG_AUTO_CANCEL;
 
-            mRemoteViews = new RemoteViews(mPackageHelper.getPackageName(),
-                    R.layout.updatehelper_notification_progress);
-            mRemoteViews.setImageViewResource(R.id.updatehelper_notification_progress_icon, mPackageHelper.getAppIcon());
+        mRemoteViews = new RemoteViews(mPackageHelper.getPackageName(),
+                R.layout.updatehelper_notification_progress);
+        mRemoteViews.setImageViewResource(R.id.updatehelper_notification_progress_icon,
+                mPackageHelper.getAppIcon());
 
-            mDownProgrNotif.contentView = mRemoteViews;
-
-            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, new Intent(), 0);
-            mDownProgrNotif.contentIntent = pendingIntent;
-        }
-        return mDownProgrNotif;
+        mDownProgrNotif.contentView = mRemoteViews;
+        mDownProgrNotif.contentIntent = PendingIntent.getService(mContext, 0, new Intent(), 0);
     }
 
-    public Notification getDownFinishedNotification(File file) {
+    private Notification getDownFinishedNotification(File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
 
@@ -61,12 +59,27 @@ class NotificationHelper {
         return noti;
     }
 
-    public NotificationManager getNotificationManager() {
-        return mContextNotificationManager;
+    /**
+     * 更新下载进度
+     * 
+     * @param percent
+     */
+    public void refreshProgress(final float percent) {
+        mContextNotificationManager.notify(1, mDownProgrNotif);
+        mRemoteViews.setProgressBar(R.id.updatehelper_notification_progress_pb, 100,
+                (int) percent, false);
+        mRemoteViews.setTextViewText(R.id.updatehelper_notification_progress_tv,
+                String.format("%.1f", percent));
     }
 
-    public RemoteViews getRemoteViews() {
-        return mRemoteViews;
+    /**
+     * 通知用户下载已经完成
+     * 
+     * @param file
+     */
+    public void notifyDownloadFinish(File file) {
+        mContextNotificationManager.notify(1,
+                getDownFinishedNotification(file));
+        Toast.makeText(mContext, "下载完成", Toast.LENGTH_SHORT).show();
     }
-
 }
