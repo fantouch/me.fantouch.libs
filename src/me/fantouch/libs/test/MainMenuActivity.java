@@ -1,12 +1,14 @@
 
-package me.fantouch.libs;
+package me.fantouch.libs.test;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import me.fantouch.libs.test.TestUpdateHelperActivity;
+import me.fantouch.libs.R;
+import me.fantouch.libs.R.id;
+import me.fantouch.libs.R.layout;
 
 public class MainMenuActivity extends Activity {
 
