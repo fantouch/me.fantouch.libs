@@ -31,56 +31,56 @@ import android.util.Log;
  * @author Fantouch
  */
 public class ELog {
-    private static boolean DEBUG = true;
+    private static boolean ENABLE = true;
 
     /**
      * 开启调试输出
      */
     public static void enable() {
-        DEBUG = true;
+        ENABLE = true;
     }
 
     /**
      * 关闭调试输出
      */
     public static void disable() {
-        DEBUG = false;
+        ENABLE = false;
     }
 
     public static boolean isEnable() {
-        return DEBUG;
+        return ENABLE;
     }
 
     public static void e(String message) {
-        if (DEBUG) {
+        if (ENABLE) {
             String[] infos = getTagAndAutoJumpFunctionText();
             Log.e(infos[0], infos[1] + message + infos[2]);
         }
     }
 
     public static void d(String message) {
-        if (DEBUG) {
+        if (ENABLE) {
             String[] infos = getTagAndAutoJumpFunctionText();
             Log.d(infos[0], infos[1] + message + infos[2]);
         }
     }
 
     public static void i(String message) {
-        if (DEBUG) {
+        if (ENABLE) {
             String[] infos = getTagAndAutoJumpFunctionText();
             Log.i(infos[0], infos[1] + message + infos[2]);
         }
     }
 
     public static void w(String message) {
-        if (DEBUG) {
+        if (ENABLE) {
             String[] infos = getTagAndAutoJumpFunctionText();
             Log.w(infos[0], infos[1] + message + infos[2]);
         }
     }
 
     public static void v(String message) {
-        if (DEBUG) {
+        if (ENABLE) {
             String[] infos = getTagAndAutoJumpFunctionText();
             Log.v(infos[0], infos[1] + message + infos[2]);
         }

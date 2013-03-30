@@ -15,82 +15,82 @@ public class SLog {
         Log.v(tag, lineNum + ": " + msg);
     }
 
-    private static boolean DEBUG = true;
+    private static boolean ENABLE = true;
 
     /**
      * 开启调试输出
      */
     public static void enable() {
-        DEBUG = true;
+        ENABLE = true;
     }
 
     /**
      * 关闭调试输出
      */
     public static void disable() {
-        DEBUG = false;
+        ENABLE = false;
     }
 
     public static boolean isEnable() {
-        return DEBUG;
+        return ENABLE;
     }
 
     public static void d(String TAG, String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.d(TAG, msg);
         }
     };
 
     public static void i(String TAG, String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.i(TAG, msg);
         }
     };
 
     public static void e(String TAG, String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.e(TAG, msg);
         }
     };
 
     public static void w(String TAG, String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.w(TAG, msg);
         }
     };
 
     public static void v(String TAG, String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.v(TAG, msg);
         }
     };
 
     public static void d(String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.d("", msg);
         }
     };
 
     public static void i(String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.i("", msg);
         }
     };
 
     public static void e(String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.e("", msg);
         }
     };
 
     public static void v(String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.v("", msg);
         }
     };
 
     public static void w(String msg) {
-        if (DEBUG) {
+        if (ENABLE) {
             Log.w("", msg);
         }
     };
