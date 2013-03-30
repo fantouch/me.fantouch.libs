@@ -11,7 +11,6 @@ import me.fantouch.libs.R;
 import me.fantouch.libs.updatehelper.AbsUpdateInfoParser;
 import me.fantouch.libs.updatehelper.UpdateHelper;
 import me.fantouch.libs.updatehelper.UpdateInfoBean;
-import me.fantouch.libs.updatehelper.UpdateListener;
 import me.fantouch.libs.updatehelper.UpdateListener.ForceUpdateListener;
 import me.fantouch.libs.updatehelper.UpdateListener.NormalUpdateListener;
 
@@ -89,9 +88,9 @@ public class TestUpdateHelperActivity extends Activity {
                 tv.append("下次再说.\n");
             }
         };
-        
+
         /**
-         * 普通检查更新结果监听器
+         * 强制检查更新结果监听器
          */
         ForceUpdateListener forceUpdateListener = new ForceUpdateListener() {
             @Override
