@@ -153,7 +153,7 @@ public class UpdateHelper {
         builder.setMessage("是否下载?");
         builder.setPositiveButton("下载", positiveBtnLsnr);
         if (mUpdateListener instanceof ForceUpdateListener) {
-            builder.setNegativeButton("不更新", negativeBtnLsnr);
+            builder.setNegativeButton("退出", negativeBtnLsnr);
         } else if(mUpdateListener instanceof NormalUpdateListener){
             builder.setNeutralButton("下次再说", neutralBtnLsnr);
         }
@@ -188,7 +188,7 @@ public class UpdateHelper {
 
                 @Override
                 public void onSuccess(File file) {
-                            mNotificationHelper.notifyDownloadFinish(file);
+                    mNotificationHelper.notifyDownloadFinish(file);
                 }
 
                 @Override
