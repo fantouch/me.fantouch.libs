@@ -7,9 +7,8 @@ import android.util.Log;
  * (ExtremLog=>ELog)<br>
  * 可以记录行号,类名,方法名,可是实现双击转跳的Android Log增强工具
  * <p>
- * 这里使用+拼接String,由于编译器自动优化,<br>
- * 与StringBuilder几乎没差别,<br>
- * 直观起见,不用{@link StringBuilder}了
+ * 直观起见,本工具内部使用+拼接String,编译器会自动优化,<br>
+ * 效率与{@link StringBuilder}几乎没差别<br>
  * <p>
  * 性能方面,耗时是{@link Log}的20倍,<br>
  * 因此在App发布前务必关闭DEBUG开关: {@link ELog#disable()}
@@ -20,7 +19,12 @@ import android.util.Log;
  * ELog.v(&quot;Hello World&tilde;&quot;);<p>
  * LogCat输出:
  * 03-29 16:06:53.657: V/TestActivity(2244): onCreate(): Hello World~    at (TestActivity.java:41)<p>
- * 双击LogCat的输出能转跳到Java文件相应行.
+ * 
+ * 效果:
+ * 1.Tag自动用当前类名填充
+ * 2.显示当前方法名,后面跟随你的输出信息
+ * 3.结尾显示当前文件名,行号
+ * 4.双击LogCat的输出,能转跳到Java文件相应行
  * </pre>
  * <p>
  * 
