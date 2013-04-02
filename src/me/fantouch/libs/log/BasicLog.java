@@ -107,6 +107,7 @@ class BasicLog {
         File file = new File(LOG_FILE_PATH, "log");
         if (!file.exists()) {
             try {
+                new File(LOG_FILE_PATH).mkdirs();
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
