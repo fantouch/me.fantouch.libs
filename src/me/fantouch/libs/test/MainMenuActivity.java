@@ -22,7 +22,7 @@ public class MainMenuActivity extends Activity {
         if (id == R.id.updateHelper) {
             startActivity(new Intent(this, TestUpdateHelperActivity.class));
         } else if (id == R.id.log) {
-            startActivity(new Intent(this, TestLog.class));
+            startActivity(new Intent(this, TestLogActivity.class));
         }
 
     }

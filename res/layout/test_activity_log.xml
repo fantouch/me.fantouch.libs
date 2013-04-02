@@ -9,24 +9,24 @@
     tools:context=".TestUpdateHelperActivity" >
 
     <CheckBox
-        android:id="@+id/toLogcatChkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="输出到Logcat" />
-
-    <CheckBox
         android:id="@+id/toFileChkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="输出到文件" />
+        android:layout_centerHorizontal="true"
+        android:text="ELog同时输出到文件夹\nsdcard/me.fantouch.libs" />
 
     <Button
         android:id="@+id/startBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toLogcatChkbox"
+        android:layout_below="@id/toFileChkbox"
         android:layout_centerHorizontal="true"
         android:text="开始" />
+
+    <TextView
+        android:layout_below="@id/startBtn"
+        android:id="@+id/tv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

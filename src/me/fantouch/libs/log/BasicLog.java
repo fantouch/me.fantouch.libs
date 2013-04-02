@@ -32,13 +32,15 @@ class BasicLog {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss  ");
 
     /**
-     * 开启或关闭控制台输出,建议在Application里面设置,安全起见,默认是false.
+     * 是否把日志输出到Logcat,建议在Application里面设置,安全起见,默认是false.
+     * 
+     * @param enable 是否启用,出于安全和性能考虑,默认false
      */
     public static void setEnableLogCat(boolean enable) {
         if (enable) {
             if (!ENABLE_LOGCAT) {
                 ENABLE_LOGCAT = true;
-                Log.i(TAG, "Now Enabled");
+                Log.i(TAG, "Logcat Enabled");
             } else {
                 Log.i(TAG, "Log Already Enabled ");
             }
@@ -53,19 +55,18 @@ class BasicLog {
     }
 
     /**
-     * 查询是否启用控制台输出
+     * 查询当前是否把日志输出到Logcat
      * 
-     * @return
+     * @return 是否已启用
      */
     public static boolean isLogcatEnable() {
         return ENABLE_LOGCAT;
     }
 
-
-
     /**
-     * 启用保存Log到文件功能,文件所在目录/mnt/sdcard/packageName/
+     * 设置是否保存日志到文件,文件所在目录/mnt/sdcard/packageName/
      * 
+     * @param enable 是否启用,出于安全和性能考虑,默认false
      * @param ctx
      */
     public static void setEnableLogToFile(boolean enable, Context ctx) {
@@ -89,14 +90,19 @@ class BasicLog {
     }
 
     /**
-     * 查询当前是否已启用保存Log到文件的功能
+     * 查询是否有启用保存日志到文件
      * 
-     * @return
+     * @return 是否已启用
      */
     public static boolean isSaveToFileEnable() {
         return TO_FILE;
     }
 
+    /**
+     * 记录日志到文件
+     * 
+     * @param msg 需要记录的日志信息
+     */
     public static void logToFile(String msg) {
         File file = new File(LOG_FILE_PATH, "log");
         if (!file.exists()) {
@@ -106,8 +112,8 @@ class BasicLog {
                 e.printStackTrace();
             }
         }
+        // 时间应当在msg构造时就生成的,但是我们没这么高的精确度要求.
         String time = dateFormat.format(new Date(System.currentTimeMillis()));
-
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(file.getAbsolutePath(), true));
@@ -120,6 +126,7 @@ class BasicLog {
             try {
                 if (out != null) {
                     out.close();
+                    out = null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
