@@ -22,18 +22,28 @@ public interface UpdateListener {
      */
     public void onCheckFinish();
 
+    /**
+     * 强制更新结果监听器
+     * 
+     * @author Fantouch
+     */
     public static interface ForceUpdateListener extends UpdateListener {
         /**
-         * 用户明确拒绝更新(用于强制更新)<br>
-         * 你应该在这里执行退出程序的操作,否则就不叫强制更新了
+         * 用户明确拒绝更新<br>
+         * 应该在这里执行退出程序的操作,否则就不叫强制更新了
          */
         public void onDecline();
     }
 
+    /**
+     * 自愿更新结果监听器
+     * 
+     * @author Fantouch
+     */
     public static interface NormalUpdateListener extends UpdateListener {
 
         /**
-         * 用户拒绝更新(用于资源更新,例如"下次再说")
+         * 用户取消本次更新(选择了"下次再说")
          */
         public void onCancel();
     }

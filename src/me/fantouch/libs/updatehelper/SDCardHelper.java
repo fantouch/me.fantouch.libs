@@ -17,8 +17,6 @@ class SDCardHelper {
     }
 
     public static String getFilePath(PackageHelper mPackageHelper,UpdateInfoBean bean){
-        // e.g
-        // http://wz.ue189.cn/filedownload?showname=1&filename=wzchannel_v2.9_build11_ue.apk
         String folderPath = SDCardHelper.getSDPath() + File.separator
                 + mPackageHelper.getPackageName();
         File file = new File(folderPath, mPackageHelper.getPackageName() + "_" + bean.getVersionName() + "_"
