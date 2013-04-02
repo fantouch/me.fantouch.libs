@@ -8,89 +8,69 @@ import android.util.Log;
  * 
  * @author Fantouch
  */
-public class SLog {
+public class SLog extends BasicLog {
     public static void logWithLineNum(String tag, String msg) {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
         int lineNum = elements[2].getLineNumber();
         Log.v(tag, lineNum + ": " + msg);
     }
 
-    private static boolean ENABLE = true;
-
-    /**
-     * 开启调试输出
-     */
-    public static void enable() {
-        ENABLE = true;
-    }
-
-    /**
-     * 关闭调试输出
-     */
-    public static void disable() {
-        ENABLE = false;
-    }
-
-    public static boolean isEnable() {
-        return ENABLE;
-    }
-
     public static void d(String TAG, String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.d(TAG, msg);
         }
     };
 
     public static void i(String TAG, String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.i(TAG, msg);
         }
     };
 
     public static void e(String TAG, String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.e(TAG, msg);
         }
     };
 
     public static void w(String TAG, String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.w(TAG, msg);
         }
     };
 
     public static void v(String TAG, String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.v(TAG, msg);
         }
     };
 
     public static void d(String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.d("", msg);
         }
     };
 
     public static void i(String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.i("", msg);
         }
     };
 
     public static void e(String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.e("", msg);
         }
     };
 
     public static void v(String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.v("", msg);
         }
     };
 
     public static void w(String msg) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT) {
             Log.w("", msg);
         }
     };

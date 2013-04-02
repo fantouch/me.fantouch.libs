@@ -8,20 +8,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TestUpdateHelperActivity" >
 
-    <Button
-        android:id="@+id/updateHelper"
+    <CheckBox
+        android:id="@+id/toLogcatChkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClick"
-        android:text="自动更新模块" />
-    <Button
-        android:layout_below="@id/updateHelper"
-        android:id="@+id/log"
+        android:text="输出到Logcat" />
+
+    <CheckBox
+        android:id="@+id/toFileChkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="输出到文件" />
+
+    <Button
+        android:id="@+id/startBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toLogcatChkbox"
         android:layout_centerHorizontal="true"
-        android:onClick="onClick"
-        android:text="Log模块" />
+        android:text="开始" />
 
 </RelativeLayout>

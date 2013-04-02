@@ -30,6 +30,10 @@
             android:name="me.fantouch.libs.test.TestUpdateHelperActivity"
             android:label="自动更新模块测试" >
         </activity>
+        <activity
+            android:name="me.fantouch.libs.test.TestLog"
+            android:label="Log模块测试" >
+        </activity>
     </application>
 
 </manifest>

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import me.fantouch.libs.R;
-import me.fantouch.libs.R.id;
-import me.fantouch.libs.R.layout;
 
 public class MainMenuActivity extends Activity {
 
@@ -21,9 +19,10 @@ public class MainMenuActivity extends Activity {
 
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.updateHelperLib) {
+        if (id == R.id.updateHelper) {
             startActivity(new Intent(this, TestUpdateHelperActivity.class));
-        } else {
+        } else if (id == R.id.log) {
+            startActivity(new Intent(this, TestLog.class));
         }
 
     }

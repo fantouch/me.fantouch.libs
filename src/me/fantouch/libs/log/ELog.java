@@ -30,59 +30,67 @@ import android.util.Log;
  * 
  * @author Fantouch
  */
-public class ELog {
-    private static boolean ENABLE = true;
-
-    /**
-     * 开启调试输出
-     */
-    public static void enable() {
-        ENABLE = true;
-    }
-
-    /**
-     * 关闭调试输出
-     */
-    public static void disable() {
-        ENABLE = false;
-    }
-
-    public static boolean isEnable() {
-        return ENABLE;
+public class ELog extends BasicLog {
+    private ELog() {
     }
 
     public static void e(String message) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT || TO_FILE) {
             String[] infos = getTagAndAutoJumpFunctionText();
-            Log.e(infos[0], infos[1] + message + infos[2]);
+            if (ENABLE_LOGCAT) {
+                Log.e(infos[0], infos[1] + message + infos[2]);
+            }
+            if (TO_FILE) {
+                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+            }
         }
     }
 
     public static void d(String message) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT || TO_FILE) {
             String[] infos = getTagAndAutoJumpFunctionText();
-            Log.d(infos[0], infos[1] + message + infos[2]);
+            if (ENABLE_LOGCAT) {
+                Log.d(infos[0], infos[1] + message + infos[2]);
+            }
+            if (TO_FILE) {
+                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+            }
         }
     }
 
     public static void i(String message) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT || TO_FILE) {
             String[] infos = getTagAndAutoJumpFunctionText();
-            Log.i(infos[0], infos[1] + message + infos[2]);
+            if (ENABLE_LOGCAT) {
+                Log.i(infos[0], infos[1] + message + infos[2]);
+            }
+            if (TO_FILE) {
+                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+            }
         }
     }
 
     public static void w(String message) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT || TO_FILE) {
             String[] infos = getTagAndAutoJumpFunctionText();
-            Log.w(infos[0], infos[1] + message + infos[2]);
+            if (ENABLE_LOGCAT) {
+                Log.w(infos[0], infos[1] + message + infos[2]);
+            }
+            if (TO_FILE) {
+                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+            }
         }
     }
 
     public static void v(String message) {
-        if (ENABLE) {
+        if (ENABLE_LOGCAT || TO_FILE) {
             String[] infos = getTagAndAutoJumpFunctionText();
-            Log.v(infos[0], infos[1] + message + infos[2]);
+            if (ENABLE_LOGCAT) {
+                Log.v(infos[0], infos[1] + message + infos[2]);
+            }
+            if (TO_FILE) {
+                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+            }
         }
     }
 
@@ -95,6 +103,9 @@ public class ELog {
      *         <p>
      *         String[2]:<br>
      *         能使Eclipse的LogCat窗口实现双击自动转跳到相应行的功能.
+     *         <p>
+     *         String[3]:<br>
+     *         行号,把log写入到文件的时候用到
      */
     private static String[] getTagAndAutoJumpFunctionText() {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
@@ -104,15 +115,17 @@ public class ELog {
                     "", "", ""
             };
         } else {
-            String[] s = new String[3];
+            String[] s = new String[4];
             s[0] = elements[4].getClassName().substring(
                     elements[4].getClassName().lastIndexOf(".") + 1);
 
-            s[1] = elements[4].getMethodName() + "(): ";
+            s[1] = elements[4].getMethodName() + "():";
 
             s[2] = "    at (" + elements[4].getFileName() + ":"
                     + elements[4].getLineNumber()
                     + ")";
+
+            s[3] = elements[4].getLineNumber() + "";
             return s;
         }
     }

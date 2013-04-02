@@ -46,6 +46,7 @@ public class TestUpdateHelperActivity extends Activity {
             @Override
             public UpdateInfoBean parse(String info) {
                 UpdateInfoBean infoBean = new UpdateInfoBean();
+                /** 这里使用Android自带的Json工具进行解析,如果复杂的解析,推荐使用Gson */
                 try {
                     JSONObject infoJson = new JSONObject(info).getJSONObject("version");
                     infoBean.setVersionCode(infoJson.getString("build"));
@@ -54,8 +55,6 @@ public class TestUpdateHelperActivity extends Activity {
                     infoBean.setDownUrl(URL_HOST + "filedownload?showname="
                             + infoJson.getString("build") + "&filename="
                             + infoJson.getString("path"));
-                    // e.g
-                    // http://wz.ue189.cn/filedownload?showname=1&filename=wzchannel_Beta1.0_build111.apk
                 } catch (Exception e) {
                     e.printStackTrace();
                     infoBean = null;
