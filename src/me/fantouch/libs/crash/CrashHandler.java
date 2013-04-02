@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -171,6 +172,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         builder.create();
         builder.setCancelable(false);
         builder.setView(dialogView);
+        builder.create().getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         builder.show();
     }
 
