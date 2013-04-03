@@ -22,7 +22,7 @@ public class TestLogActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_activity_log);
+        setContentView(R.layout.activity_test_log);
         toFileChkbox = (CheckBox) TestLogActivity.this.findViewById(R.id.toFileChkbox);
         tv = (TextView) findViewById(R.id.tv);
         startBtn = (Button) findViewById(R.id.startBtn);

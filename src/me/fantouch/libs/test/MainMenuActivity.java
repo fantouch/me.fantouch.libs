@@ -23,6 +23,8 @@ public class MainMenuActivity extends Activity {
             startActivity(new Intent(this, TestUpdateHelperActivity.class));
         } else if (id == R.id.log) {
             startActivity(new Intent(this, TestLogActivity.class));
+        } else if (id == R.id.crash) {
+            startActivity(new Intent(this, TestCrashActivity.class));
         }
 
     }

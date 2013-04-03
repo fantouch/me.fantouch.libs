@@ -34,7 +34,7 @@ public class TestUpdateHelperActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_activity_updatehelper);
+        setContentView(R.layout.activity_test_updatehelper);
         tv = (TextView) findViewById(R.id.updateHelperTextView);
     }
 
