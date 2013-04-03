@@ -2,7 +2,6 @@
 package me.fantouch.libs.log;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -14,6 +13,10 @@ import java.util.Date;
 
 class BasicLog {
     private static final String TAG = BasicLog.class.getSimpleName();
+    /**
+     * 日志文件扩展名
+     */
+    private static final String LOG_FILE_EXTENSION = ".log";
     /**
      * 是否启用Log
      */
@@ -29,7 +32,8 @@ class BasicLog {
     /**
      * 记录到文件的Log信息的日期前缀
      */
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss  ");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm:ss ");
 
     /**
      * 是否把日志输出到Logcat,建议在Application里面设置,安全起见,默认是false.
@@ -73,8 +77,7 @@ class BasicLog {
         if (enable) {
             if (!TO_FILE) {// 启用保存到文件
                 TO_FILE = true;
-                LOG_FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + File.separator + ctx.getPackageName();
+                LOG_FILE_PATH = ctx.getFilesDir().getAbsolutePath();
                 Log.i(TAG, "Will Save Log To File");
             } else {
                 Log.i(TAG, "Save To File Already Enable");
@@ -104,7 +107,8 @@ class BasicLog {
      * @param msg 需要记录的日志信息
      */
     public static void logToFile(String msg) {
-        File file = new File(LOG_FILE_PATH, "log");
+        File file = new File(LOG_FILE_PATH,
+                DATE_FORMAT.format(new Date(System.currentTimeMillis())) + LOG_FILE_EXTENSION);
         if (!file.exists()) {
             try {
                 new File(LOG_FILE_PATH).mkdirs();
@@ -114,7 +118,7 @@ class BasicLog {
             }
         }
         // 时间应当在msg构造时就生成的,但是我们没这么高的精确度要求.
-        String time = dateFormat.format(new Date(System.currentTimeMillis()));
+        String time = TIME_FORMAT.format(new Date(System.currentTimeMillis()));
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(file.getAbsolutePath(), true));
@@ -133,5 +137,9 @@ class BasicLog {
                 e.printStackTrace();
             }
         }
+    }
+
+    // TODO sendReportFiles
+    public static void sendReportFiles() {
     }
 }
