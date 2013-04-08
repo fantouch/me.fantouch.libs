@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import me.fantouch.libs.reporter.AbsSendReportsService;
+import me.fantouch.libs.reporter.NotificationHelper;
 
 import java.io.File;
 import java.util.Map;
@@ -25,7 +26,9 @@ public class MyApplication extends Application {
 
     public static class SendService extends AbsSendReportsService {
         @Override
-        public void asyncSendReportsToServer(Map<String, File> crFiles) {
+        public void asyncSendReportsToServer(Map<String, File> crFiles,
+                NotificationHelper notificationHelper) {
+
             Log.i(TAG, "sending");
             new Handler().postDelayed(new Runnable() {
                 @Override

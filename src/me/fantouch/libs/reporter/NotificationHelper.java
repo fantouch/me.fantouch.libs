@@ -11,33 +11,32 @@ import android.widget.Toast;
 
 import me.fantouch.libs.R;
 
-class NotificationHelper {
+public class NotificationHelper {
 
     private Context mContext;
     private RemoteViews mRemoteViews;
     private Notification mProgrNotif;
     private PackageHelper mPackageHelper;
-    private NotificationManager mContextNotificationManager;
+    private NotificationManager mNotificationManager;
 
-    public NotificationHelper(Context ctx, PackageHelper packageHelper) {
+    public NotificationHelper(Context ctx) {
         mContext = ctx;
-        mPackageHelper = packageHelper;
-        mContextNotificationManager = (NotificationManager) ctx
+        mPackageHelper = new PackageHelper(ctx);
+        mNotificationManager = (NotificationManager) ctx
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         initProgrNotif();
     }
 
     private void initProgrNotif() {
-        mProgrNotif = new Notification();
-        mProgrNotif.icon = android.R.drawable.stat_sys_download;
-        mProgrNotif.flags |= Notification.FLAG_AUTO_CANCEL;
-
         mRemoteViews = new RemoteViews(mPackageHelper.getPackageName(),
                 R.layout.reporter_notification_progress);
         mRemoteViews.setImageViewResource(R.id.reporter_notification_progress_icon,
                 mPackageHelper.getAppIcon());
 
+        mProgrNotif = new Notification();
         mProgrNotif.contentView = mRemoteViews;
+        mProgrNotif.flags |= Notification.FLAG_AUTO_CANCEL;
+        mProgrNotif.icon = android.R.drawable.stat_sys_download;
         mProgrNotif.contentIntent = PendingIntent.getService(mContext, 0, new Intent(), 0);
     }
 
@@ -47,15 +46,23 @@ class NotificationHelper {
      * @param percent
      */
     public void refreshProgress(final float percent) {
-        mContextNotificationManager.notify(1, mProgrNotif);
+        mNotificationManager.notify(1, mProgrNotif);
         mRemoteViews.setProgressBar(R.id.reporter_notification_progress_pb, 100,
                 (int) percent, false);
         mRemoteViews.setTextViewText(R.id.reporter_notification_progress_tv,
                 String.format("%.1f", percent));
     }
 
-    public void reportFinishedCancelNotif() {
-        mContextNotificationManager.cancel(1);
-        Toast.makeText(mContext, "发送完毕,谢谢", Toast.LENGTH_SHORT).show();
+    /**
+     * 移除发送进度通知,停止发送服务,并弹出以下Toast提示
+     * 
+     * <pre>
+     * Toast.makeText(mContext, &quot;发送完毕&quot;, Toast.LENGTH_SHORT).show();
+     * </pre>
+     */
+    public void onSendFinish(AbsSendReportsService service) {
+        mNotificationManager.cancel(1);
+        service.stopSelf();
+        Toast.makeText(mContext, "发送完毕", Toast.LENGTH_SHORT).show();
     }
 }

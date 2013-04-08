@@ -21,6 +21,7 @@ public abstract class AbsSendReportsService extends Service {
     private static final String TAG = AbsSendReportsService.class.getSimpleName();
     public static final String CRASH_REPORT_FILE_NAMES = "CRASH_REPORT_FILE_NAMES";
     public static final String LOG_FILE_NAMES = "LOG_FILE_NAMES";
+    private NotificationHelper notificationHelper;
 
     @Override
     public void onCreate() {
@@ -31,6 +32,10 @@ public abstract class AbsSendReportsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "onStartCommand()");
+
+        if (notificationHelper == null) {
+            notificationHelper = new NotificationHelper(this);
+        }
 
         String[] crFileNames = intent.getStringArrayExtra(CRASH_REPORT_FILE_NAMES);
 
@@ -45,7 +50,7 @@ public abstract class AbsSendReportsService extends Service {
                 }
             }
             if (reportFiles.size() != 0) {
-                asyncSendReportsToServer(reportFiles);
+                asyncSendReportsToServer(reportFiles, notificationHelper);
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -63,13 +68,13 @@ public abstract class AbsSendReportsService extends Service {
     }
 
     /**
-     * 请自行实现异步发送文件到服务器,发送完毕应调用{@link Service#stopSelf()}以停止服务
+     * 请自行实现异步发送文件到服务器<br>
+     * 更新通知栏的发送进度{@link NotificationHelper#refreshProgress(float)}<br>
+     * 发送完毕{@link NotificationHelper#onSendFinish(AbsSendReportsService)}
      * 
-     * @param reportFiles 崩溃文件集合,Key:文件名,Value:文件对象
+     * @param reportFiles
+     * @param notificationHelper
      */
-    public abstract void asyncSendReportsToServer(Map<String, File> reportFiles);
-
-    // ProgressBar pb = new ProgressBar(mContext, null,
-    // android.R.attr.progressBarStyleInverse);
-    // pb.setMax(100);
+    public abstract void asyncSendReportsToServer(Map<String, File> reportFiles,
+            NotificationHelper notificationHelper);
 }

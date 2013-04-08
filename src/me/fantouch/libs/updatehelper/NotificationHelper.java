@@ -14,7 +14,7 @@ import me.fantouch.libs.R;
 
 import java.io.File;
 
-class NotificationHelper {
+public class NotificationHelper {
 
     private Context mContext;
     private RemoteViews mRemoteViews;

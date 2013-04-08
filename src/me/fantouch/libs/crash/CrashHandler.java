@@ -25,6 +25,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -52,13 +53,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
     /** 错误报告文件的扩展名 */
     private static final String CRASH_REPORTER_EXTENSION = ".crash";
     /** 错误报告文件名中的日期格式 */
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss",
+            Locale.CHINA);
 
-    /** 保证只有一个CrashHandler实例 */
     private CrashHandler() {
     }
 
-    /** 获取CrashHandler实例 ,单例模式 */
     public static CrashHandler getInstance() {
         if (instance == null) {
             instance = new CrashHandler();
@@ -112,7 +112,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
      */
     private void shutDown() {
         android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(10);
+        System.exit(0);
     }
 
     /**
@@ -138,7 +138,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setCancelable(true);
         builder.setTitle("程序出错了,即将退出");
-        builder.setMessage("发送错误信息,帮助我们修复问题");
+        builder.setMessage("错误报告已经生成,发送有助于我们修复问题");
         builder.setPositiveButton("发送", positiveBtnLsnr);
         builder.setNegativeButton("不发送", negativeBtnLsnr);
         AlertDialog dialog = builder.create();
