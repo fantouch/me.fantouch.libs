@@ -41,7 +41,7 @@
             android:label="测试崩溃处理模块" >
         </activity>
 
-        <service android:name="me.fantouch.libs.crash.MyApplication$SendService" >
+        <service android:name="me.fantouch.libs.test.SendService" >
         </service>
     </application>
 

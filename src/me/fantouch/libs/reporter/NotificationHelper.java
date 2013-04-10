@@ -43,7 +43,7 @@ public class NotificationHelper {
     /**
      * 更新进度
      * 
-     * @param percent
+     * @param percent 百分比0~1
      */
     public void refreshProgress(final float percent) {
         mNotificationManager.notify(1, mProgrNotif);
