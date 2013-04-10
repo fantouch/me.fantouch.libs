@@ -24,7 +24,7 @@ public class SendService extends AbsSendReportsService {
             e.printStackTrace();
         }
         FinalHttp fh = new FinalHttp();
-        fh.post("http://192.168.0.111/server/upload.php", params,
+        fh.post("http://192.168.1.5/server/upload.php", params,
                 new AjaxCallBack<String>() {
             @Override
             public void onStart() {
@@ -34,12 +34,12 @@ public class SendService extends AbsSendReportsService {
             @Override
             public void onSuccess(String t) {
                 Log.i(TAG, t);
-                        stopSelf();
+                stopSelf();
             }
 
-                    @Override
+            @Override
             public void onFailure(Throwable t, String strMsg) {
-                        stopSelf();
+                stopSelf();
             }
         });
     }

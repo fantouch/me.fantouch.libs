@@ -21,34 +21,25 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Properties;
 
 /**
  * 捕捉App全局异常,并由用户决定是否发送到服务器
  */
 public class CrashHandler implements UncaughtExceptionHandler {
-    /** Debug Log Tag */
     public static final String TAG = CrashHandler.class.getSimpleName();
-    /** 是否开启日志输出, 在Debug状态下开启, 在Release状态下关闭以提升程序性能 */
-    public static final boolean DEBUG = true;
-    /** CrashHandler实例 */
     private static CrashHandler instance;
-    /** 程序的Context对象 */
     private Context mContext;
-    /** 系统默认的UncaughtException处理类,如果本CrashHandler没能处理,则交由此来处理 */
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
+    private UncaughtExceptionHandler mDefaultHandler;
 
     /** 使用Properties来保存设备的信息和错误堆栈信息 */
-    private Properties mDeviceCrashInfo = new Properties();
+    private Properties mCrashInfo = new Properties();
     private static final String VERSION_NAME = "versionName";
     private static final String VERSION_CODE = "versionCode";
-    private static final String STACK_TRACE = "STACK_TRACE";
     /** 错误报告文件的扩展名 */
     public static final String CRASH_REPORTER_EXTENSION = ".crash";
     /** 错误报告文件名中的日期格式 */
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss",
-            Locale.CHINA);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
 
     private CrashHandler() {
     }
@@ -62,7 +53,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
     }
 
     /**
-     * 初始化,注册Context对象, 获取系统默认的UncaughtException处理器, 设置该CrashHandler为程序的默认处理器
+     * @param ctx
+     * @param sendService 用户自行实现的发送服务
      */
     public void init(Context ctx, Class<? extends AbsSendReportsService> sendService) {
         mContext = ctx;
@@ -72,6 +64,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
         sendLastReport(sendService);
     }
 
+    /**
+     * 发送上次的报告
+     * 
+     * @param sendService
+     */
     private void sendLastReport(Class<? extends AbsSendReportsService> sendService) {
         Intent intent = new Intent(mContext, sendService);
         intent.putExtra(AbsSendReportsService.INTENT_DIR, mContext.getFilesDir()
@@ -85,10 +82,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(final Thread thread, final Throwable ex) {
-
-        // 开始处理异常
         if (mDefaultHandler == null || ex == null) {
-            shutDown();
+            exitCurrentApp();
         } else {
             new Thread() {
                 @Override
@@ -97,7 +92,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                     Looper.prepare();
 
                     AlertDialog dialog = showExceptionDialog();
-                    collectCrashDeviceInfo(mContext);
+                    collectDeviceInfo(mContext);
                     saveCrashInfoToFile(ex);
                     dismissExceptionDialog(dialog);
 
@@ -109,10 +104,10 @@ public class CrashHandler implements UncaughtExceptionHandler {
     }
 
     /**
-     * 强制关闭程序
+     * 强制关闭程序<br>
      * FIXME 并不能退出所有Activity,目前尚未找到比较优雅的做法
      */
-    private void shutDown() {
+    private void exitCurrentApp() {
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }
@@ -128,27 +123,39 @@ public class CrashHandler implements UncaughtExceptionHandler {
         builder.setMessage("正在收集错误信息...");
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         AlertDialog dialog = builder.create();
+
+        // <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+        // http://android.35g.tw/?p=191
         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         dialog.show();
         return dialog;
     }
 
     private void dismissExceptionDialog(final AlertDialog dialog) {
-        dialog.setMessage("正在退出...");
+        // 使用postDelayed让用户能有足够时间看清提示信息
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
-                dialog.dismiss();
-                shutDown();
+
+                dialog.setMessage("正在退出...");
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        dialog.dismiss();
+                        exitCurrentApp();
+
+                    }
+                }, 2 * 1000);
             }
-        }, 1000);
+        }, 2 * 1000);
     }
 
-    public void collectCrashDeviceInfo(Context ctx) {
+    private void collectDeviceInfo(Context ctx) {
         PackageHelper packageHelper = new PackageHelper(mContext);
-        mDeviceCrashInfo.put(VERSION_NAME, packageHelper.getLocalVersionName());
-        mDeviceCrashInfo.put(VERSION_CODE, packageHelper.getLocalVersionCode() + "");
+        mCrashInfo.put(VERSION_NAME, packageHelper.getLocalVersionName());
+        mCrashInfo.put(VERSION_CODE, packageHelper.getLocalVersionCode() + "");
         // 使用反射来收集设备信息.在Build类中包含各种设备信息,
         Field[] fields = Build.class.getDeclaredFields();
         for (Field field : fields) {
@@ -160,9 +167,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                mDeviceCrashInfo.put(field.getName(), fieldStr);
+                mCrashInfo.put(field.getName(), fieldStr);
             } catch (Exception e) {
-                Log.e(TAG, "Error while collect crash info", e);
+                Log.e(TAG, "Error while collecting device info", e);
             }
         }
     }
@@ -171,28 +178,30 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Writer info = new StringWriter();
         PrintWriter printWriter = new PrintWriter(info);
 
+        printWriter.write("\n=========printStackTrace()==========\n");
         ex.printStackTrace(printWriter);
+
+        printWriter.write("\n\n=========getCause()==========\n");
         Throwable cause = ex.getCause();
         while (cause != null) {
             cause.printStackTrace(printWriter);
             cause = cause.getCause();
         }
 
-        String result = info.toString();
+        String stackTrace = info.toString();
         printWriter.close();
-        mDeviceCrashInfo.put(STACK_TRACE, result);
 
         try {
             String fileName = dateFormat.format(new Date(System.currentTimeMillis()))
                     + CRASH_REPORTER_EXTENSION;
             // 保存文件
             FileOutputStream trace = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
-            mDeviceCrashInfo.store(trace, "");
+            mCrashInfo.store(trace, "");
+            trace.write(stackTrace.getBytes());
             trace.flush();
             trace.close();
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing report file", e);
         }
     }
-
 }
