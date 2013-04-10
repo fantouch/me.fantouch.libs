@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 class DeviceUuidFactory {
-    private static final String PREFS_FILE = "device_id.xml";
+    private static final String PREFS_FILE = "device_id";
     private static final String PREFS_DEVICE_ID = "device_id";
     private static UUID uuid;
 

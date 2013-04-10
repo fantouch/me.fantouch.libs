@@ -17,13 +17,13 @@ public class SendService extends AbsSendReportsService {
 
     @Override
     public void sendZipReportsToServer(File reportsZip, NotificationHelper notificationHelper) {
-        FinalHttp fh = new FinalHttp();
         AjaxParams params = new AjaxParams();
         try {
-            params.put("testCrashZip", reportsZip);
+            params.put("userfile", reportsZip);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        FinalHttp fh = new FinalHttp();
         fh.post("http://192.168.0.111/server/upload.php", params,
                 new AjaxCallBack<String>() {
             @Override
@@ -34,6 +34,12 @@ public class SendService extends AbsSendReportsService {
             @Override
             public void onSuccess(String t) {
                 Log.i(TAG, t);
+                        stopSelf();
+            }
+
+                    @Override
+            public void onFailure(Throwable t, String strMsg) {
+                        stopSelf();
             }
         });
     }

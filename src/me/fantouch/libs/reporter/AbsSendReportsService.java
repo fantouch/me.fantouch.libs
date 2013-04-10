@@ -2,10 +2,7 @@
 package me.fantouch.libs.reporter;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -115,11 +112,13 @@ public abstract class AbsSendReportsService extends Service {
     }
 
     private void isWifiAvailable(AjaxCallBack<String> wifiCheckResultCallBack) {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        if (info == null || !info.isConnected()) {
-            wifiCheckResultCallBack.onFailure(null, null);
-        }
+        // FIXME 忽略wifi验证
+        // ConnectivityManager cm = (ConnectivityManager)
+        // getSystemService(Context.CONNECTIVITY_SERVICE);
+        // NetworkInfo info = cm.getActiveNetworkInfo();
+        // if (info == null || !info.isConnected()) {
+        // wifiCheckResultCallBack.onFailure(null, null);
+        // }
         FinalHttp fh = new FinalHttp();
         fh.get(NETWORK_TEST_HOST, wifiCheckResultCallBack);
     }
