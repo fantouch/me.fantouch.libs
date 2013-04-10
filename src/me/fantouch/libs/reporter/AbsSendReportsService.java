@@ -12,6 +12,8 @@ import net.tsz.afinal.http.AjaxCallBack;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 后台发送崩溃报告服务,请不要忘记在AndroidManifest.xml里面注册
@@ -83,9 +85,11 @@ public abstract class AbsSendReportsService extends Service {
         }
 
         // 压缩文件
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd#hh.mm.ss");
+        String time = timeFormat.format(new Date(System.currentTimeMillis()));
         String deviceId = new DeviceUuidFactory(this).getDeviceUuid().toString();
         final String ZIP_PATH = getFilesDir().getAbsolutePath()
-                + File.separator + deviceId + reportExtension + ".zip";
+                + File.separator + deviceId + reportExtension + "@" + time + ".zip";
         ZipCompressor zipCompressor = new ZipCompressor(ZIP_PATH);
         zipCompressor.compress(crFilePaths);
         File zipFile = new File(ZIP_PATH);
