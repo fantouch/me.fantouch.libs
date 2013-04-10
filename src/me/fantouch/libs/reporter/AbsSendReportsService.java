@@ -19,7 +19,6 @@ import java.io.FilenameFilter;
  * @author Fantouch
  */
 public abstract class AbsSendReportsService extends Service {
-
     public static final String INTENT_BROADCAST = "me.fantouch.libs.reporter.INTENT_BROADCAST";
     public static final String INTENT_DIR = "me.fantouch.libs.reporter.INTENT_DIR";
     public static final String INTENT_EXTENSION = "me.fantouch.libs.reporter.INTENT_EXTENSION";
@@ -28,7 +27,6 @@ public abstract class AbsSendReportsService extends Service {
     private static final String NETWORK_TEST_HOST_KEYWORD = "baidu.com";
 
     private static final String TAG = AbsSendReportsService.class.getSimpleName();
-    private NotificationHelper notificationHelper;
 
     @Override
     public void onCreate() {
@@ -39,20 +37,28 @@ public abstract class AbsSendReportsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "onStartCommand()");
+        int onStartCommandResult = super.onStartCommand(intent, flags, startId);
 
-        final String dir = intent.getStringExtra(INTENT_DIR);
-        final String extension = intent.getStringExtra(INTENT_EXTENSION);
-        if (TextUtils.isEmpty(dir) || TextUtils.isEmpty(extension)) {
+        final String reportsDir = intent.getStringExtra(INTENT_DIR);
+        final String reportExtension = intent.getStringExtra(INTENT_EXTENSION);
+        if (TextUtils.isEmpty(reportsDir) || TextUtils.isEmpty(reportExtension)) {
             Log.e(TAG, "INTENT_DIR or INTENT_EXTENSION can not be null");
             stopSelf();
-            return super.onStartCommand(intent, flags, startId);
+            return onStartCommandResult;
         }
 
-        isWifiAvailable(new AjaxCallBack<String>() {
+        AjaxCallBack<String> httpGetCallBack = new AjaxCallBack<String>() {
             @Override
-            public void onSuccess(String t) {
+            public void onSuccess(String t) {// wifi可用
                 if (t != null && t.indexOf(NETWORK_TEST_HOST_KEYWORD) > -1) {
-                    sendCrashReportsToServer(dir, extension);
+                    File zipFile = zipReports(reportsDir, reportExtension);
+                    if (zipFile != null) {
+                        // 发送报告
+                        sendZipReportsToServer(zipFile, new NotificationHelper(
+                                AbsSendReportsService.this));
+                    } else {
+                        stopSelf();
+                    }
                 } else {
                     onFailure(null, null);
                 }
@@ -62,56 +68,65 @@ public abstract class AbsSendReportsService extends Service {
             public void onFailure(Throwable t, String strMsg) {
                 stopSelf();
             }
-        });
+        };
 
-        return super.onStartCommand(intent, flags, startId);
+        isWifiAvailable(httpGetCallBack);
+        return onStartCommandResult;
     }
 
-    private void sendCrashReportsToServer(String dir, final String extension) {
-        String[] crFileNames = getCrashReportFiles(dir, extension);
-        if (crFileNames == null || crFileNames.length == 0) {// 停止处理
-            Log.w(TAG, "No file found to be send");
+    private File zipReports(String reportsDir, final String reportExtension) {
+        // 获得文件路径列表
+        String[] crFilePaths = getReportFilePaths(reportsDir, reportExtension);
+        if (crFilePaths == null || crFilePaths.length == 0) {
             stopSelf();
-            return;
+            return null;
         }
 
-        String[] crFilePaths = new String[crFileNames.length];
-        for (int i = 0; i < crFileNames.length; i++) {
-            crFilePaths[i] = dir + File.separator + crFileNames[i];
-        }
-
-        File zipFile = zipReports(extension, crFilePaths);
-        if (zipFile != null && zipFile.exists() && zipFile.length() != 0) {
-            sendZipReportsToServer(zipFile, new NotificationHelper(this));
-        } else {
-            Log.w(TAG, "zip fail");
-        }
-    }
-
-    private File zipReports(String reportExtension, String[] crFileNames) {
+        // 压缩文件
         String deviceId = new DeviceUuidFactory(this).getDeviceUuid().toString();
         final String ZIP_PATH = getFilesDir().getAbsolutePath()
                 + File.separator + deviceId + reportExtension + ".zip";
         ZipCompressor zipCompressor = new ZipCompressor(ZIP_PATH);
-        zipCompressor.compress(crFileNames);
-        return new File(ZIP_PATH);
+        zipCompressor.compress(crFilePaths);
+        File zipFile = new File(ZIP_PATH);
+
+        if (zipFile == null || !zipFile.exists() || zipFile.length() == 0) {
+            Log.w(TAG, "zip fail");
+            stopSelf();
+            return null;
+        }
+
+        return zipFile;
     }
 
-    private String[] getCrashReportFiles(String dir, final String extension) {
-        File filesDir = new File(dir);
-        // 实现FilenameFilter接口的类实例可用于过滤器文件名
+    private String[] getReportFilePaths(String reportsDir, final String extension) {
+        // 根据扩展名过滤得到目标文件名列表
+        File filesDir = new File(reportsDir);
         FilenameFilter filter = new FilenameFilter() {
-            // 测试指定文件是否应该包含在某一文件列表中。
             @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(extension);
             }
         };
-        // 返回一个字符串数组，这些字符串指定此抽象路径名表示的目录中满足指定过滤器的文件和目录
-        return filesDir.list(filter);
+        String[] fileNames = filesDir.list(filter);
+        if (fileNames == null || fileNames.length == 0) {
+            Log.w(TAG, "No file found to be send");
+            stopSelf();
+            return null;
+        }
+
+        // 生成目标文件路径
+        String[] filePaths = new String[fileNames.length];
+        for (int i = 0; i < fileNames.length; i++) {
+            filePaths[i] = reportsDir + File.separator + fileNames[i];
+        }
+        return filePaths;
     }
 
-    private void isWifiAvailable(AjaxCallBack<String> wifiCheckResultCallBack) {
+    /**
+     * @param httpGetCallBack wifi检查结果回调函数
+     */
+    private void isWifiAvailable(AjaxCallBack<String> httpGetCallBack) {
         // FIXME 忽略wifi验证
         // ConnectivityManager cm = (ConnectivityManager)
         // getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -120,7 +135,7 @@ public abstract class AbsSendReportsService extends Service {
         // wifiCheckResultCallBack.onFailure(null, null);
         // }
         FinalHttp fh = new FinalHttp();
-        fh.get(NETWORK_TEST_HOST, wifiCheckResultCallBack);
+        fh.get(NETWORK_TEST_HOST, httpGetCallBack);
     }
 
     @Override
@@ -135,7 +150,8 @@ public abstract class AbsSendReportsService extends Service {
     }
 
     /**
-     * 请自行实现异步发送文件到服务器
+     * 请自行实现异步发送文件到服务器<br>
+     * 无论发送成功还是失败,请记得调用{@link Service#stopSelf()}
      * <p>
      * <li>操作通知栏(可选):<br>
      * 更新进度{@link NotificationHelper#refreshProgress(float)}<br>
