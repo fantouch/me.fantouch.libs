@@ -9,11 +9,6 @@ import android.util.Log;
  * @author Fantouch
  */
 public class SLog extends BasicLog {
-    public static void logWithLineNum(String tag, String msg) {
-        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        int lineNum = elements[2].getLineNumber();
-        Log.v(tag, lineNum + ": " + msg);
-    }
 
     public static void d(String TAG, String msg) {
         if (ENABLE_LOGCAT) {
@@ -42,36 +37,6 @@ public class SLog extends BasicLog {
     public static void v(String TAG, String msg) {
         if (ENABLE_LOGCAT) {
             Log.v(TAG, msg);
-        }
-    };
-
-    public static void d(String msg) {
-        if (ENABLE_LOGCAT) {
-            Log.d("", msg);
-        }
-    };
-
-    public static void i(String msg) {
-        if (ENABLE_LOGCAT) {
-            Log.i("", msg);
-        }
-    };
-
-    public static void e(String msg) {
-        if (ENABLE_LOGCAT) {
-            Log.e("", msg);
-        }
-    };
-
-    public static void v(String msg) {
-        if (ENABLE_LOGCAT) {
-            Log.v("", msg);
-        }
-    };
-
-    public static void w(String msg) {
-        if (ENABLE_LOGCAT) {
-            Log.w("", msg);
         }
     };
 }

@@ -29,7 +29,7 @@ public class TestLogActivity extends Activity {
         startBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ELog.setEnableLogCat(true);
+                ELog.setEnableLogcat(true);
                 ELog.setEnableLogToFile(toFileChkbox.isChecked(), TestLogActivity.this);
                 v.setEnabled(false);
                 tv.append("\n\n");

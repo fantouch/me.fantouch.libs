@@ -26,8 +26,7 @@ import org.json.JSONObject;
  */
 public class TestUpdateHelperActivity extends Activity {
     private final static String URL_HOST = "http://wz.ue189.cn/";
-    private final static String URL_CHK_UPDATE = URL_HOST
-            + "http://wz.ue189.cn/android-version.action";
+    private final static String URL_CHK_UPDATE = URL_HOST + "android-version.action";
 
     private TextView tv;
 

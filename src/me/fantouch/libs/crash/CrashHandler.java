@@ -70,6 +70,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param sendService
      */
     private void sendLastReport(Class<? extends AbsSendReportsService> sendService) {
+        if (sendService == null)
+            return;
         Intent intent = new Intent(mContext, sendService);
         intent.putExtra(AbsSendReportsService.INTENT_DIR, mContext.getFilesDir()
                 .getAbsolutePath());

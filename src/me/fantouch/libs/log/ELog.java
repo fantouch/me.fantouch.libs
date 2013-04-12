@@ -41,7 +41,7 @@ public class ELog extends BasicLog {
                 Log.e(infos[0], infos[1] + message + infos[2]);
             }
             if (TO_FILE) {
-                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+                save(infos[0] + "." + infos[1] + infos[3] + " " + message);
             }
         }
     }
@@ -53,7 +53,7 @@ public class ELog extends BasicLog {
                 Log.d(infos[0], infos[1] + message + infos[2]);
             }
             if (TO_FILE) {
-                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+                save(infos[0] + "." + infos[1] + infos[3] + " " + message);
             }
         }
     }
@@ -65,7 +65,7 @@ public class ELog extends BasicLog {
                 Log.i(infos[0], infos[1] + message + infos[2]);
             }
             if (TO_FILE) {
-                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+                save(infos[0] + "." + infos[1] + infos[3] + " " + message);
             }
         }
     }
@@ -77,7 +77,7 @@ public class ELog extends BasicLog {
                 Log.w(infos[0], infos[1] + message + infos[2]);
             }
             if (TO_FILE) {
-                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+                save(infos[0] + "." + infos[1] + infos[3] + " " + message);
             }
         }
     }
@@ -89,7 +89,7 @@ public class ELog extends BasicLog {
                 Log.v(infos[0], infos[1] + message + infos[2]);
             }
             if (TO_FILE) {
-                logToFile(infos[0] + "." + infos[1] + infos[3] + " " + message);
+                save(infos[0] + "." + infos[1] + infos[3] + " " + message);
             }
         }
     }

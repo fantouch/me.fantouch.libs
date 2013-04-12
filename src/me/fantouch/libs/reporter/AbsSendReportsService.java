@@ -161,7 +161,7 @@ public abstract class AbsSendReportsService extends Service {
      * 更新进度{@link NotificationHelper#refreshProgress(float)}<br>
      * 发送完毕{@link NotificationHelper#onSendFinish(AbsSendReportsService)}
      * 
-     * @param reportFiles
+     * @param reportFiles 你要发送的文件已经被打包成zip文件了
      * @param notificationHelper
      */
     public abstract void sendZipReportsToServer(File reportsZip,

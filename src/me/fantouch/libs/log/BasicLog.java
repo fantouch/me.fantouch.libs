@@ -2,7 +2,10 @@
 package me.fantouch.libs.log;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+
+import me.fantouch.libs.reporter.AbsSendReportsService;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,7 +43,7 @@ class BasicLog {
      * 
      * @param enable 是否启用,出于安全和性能考虑,默认false
      */
-    public static void setEnableLogCat(boolean enable) {
+    public static void setEnableLogcat(boolean enable) {
         if (enable) {
             if (!ENABLE_LOGCAT) {
                 ENABLE_LOGCAT = true;
@@ -68,7 +71,7 @@ class BasicLog {
     }
 
     /**
-     * 设置是否保存日志到文件,文件所在目录/mnt/sdcard/packageName/
+     * 设置是否保存日志到文件,文件所在目录/data/data/packageName/
      * 
      * @param enable 是否启用,出于安全和性能考虑,默认false
      * @param ctx
@@ -106,7 +109,7 @@ class BasicLog {
      * 
      * @param msg 需要记录的日志信息
      */
-    public static void logToFile(String msg) {
+    public static void save(String msg) {
         File file = new File(LOG_FILE_PATH,
                 DATE_FORMAT.format(new Date(System.currentTimeMillis())) + LOG_FILE_EXTENSION);
         if (!file.exists()) {
@@ -139,7 +142,12 @@ class BasicLog {
         }
     }
 
-    // TODO sendReportFiles
-    public static void sendReportFiles() {
+    // 发送日志文件到服务器
+    public static void sendReportFiles(Context ctx,
+            Class<? extends AbsSendReportsService> sendService) {
+        Intent intent = new Intent(ctx, sendService);
+        intent.putExtra(AbsSendReportsService.INTENT_DIR, LOG_FILE_PATH);
+        intent.putExtra(AbsSendReportsService.INTENT_EXTENSION, LOG_FILE_EXTENSION);
+        ctx.startService(intent);
     }
 }

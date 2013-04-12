@@ -1,3 +1,4 @@
+
 package me.fantouch.libs.test;
 
 import android.util.Log;
@@ -17,18 +18,19 @@ public class SendService extends AbsSendReportsService {
 
     @Override
     public void sendZipReportsToServer(File reportsZip, NotificationHelper notificationHelper) {
+
         AjaxParams params = new AjaxParams();
         try {
-            params.put("userfile", reportsZip);
+            params.put("reportsZip", reportsZip);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         FinalHttp fh = new FinalHttp();
-        fh.post("http://192.168.1.5/server/upload.php", params,
-                new AjaxCallBack<String>() {
+        fh.post("http://192.168.0.163:8888/upload.php", params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
-                Log.i(TAG, "start post");
+                Log.i(TAG, "start");
             }
 
             @Override
@@ -39,6 +41,7 @@ public class SendService extends AbsSendReportsService {
 
             @Override
             public void onFailure(Throwable t, String strMsg) {
+                Log.i(TAG, "send fail");
                 stopSelf();
             }
         });
