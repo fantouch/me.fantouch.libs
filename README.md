@@ -1,8 +1,10 @@
 me.fantouch.libs
 ================
 
-**Android Library工程,包含若干个帮助Android开发的模块.**
-**你的Android工程添加本Library依赖,即可使用里面的模块**
+**Android Library工程,包含若干模块,使Android开发更方便**  
+**你的Android工程添加本Library依赖,即可使用**  
+  
+**含有以下模块**
 * [CrashHandler崩溃处理模块](https://github.com/fantouch/me.fantouch.libs#crashhandler)  
 * [ELog日志模块](https://github.com/fantouch/me.fantouch.libs#elog)  
 * [UpdateHelper自动更新模块](https://github.com/fantouch/me.fantouch.libs#updatehelper)  
@@ -42,12 +44,15 @@ me.fantouch.libs
         public void onCreate() {
             super.onCreate();
     
-            // 注册crashHandler,保存日志但不上传到服务器
+            /* 注册crashHandler,保存日志但不上传到服务器 */
             CrashHandler.getInstance().init(getApplicationContext(), null);
             
-            // 注册crashHandler,保存日志并自动上传到服务器
-            //SendService extends AbsSendReportsService
+            /* 注册crashHandler,保存日志并自动上传到服务器 */
             CrashHandler.getInstance().init(getApplicationContext(), SendService.class);
+            
+            // 根据你与服务器的交互协议,实现 SendService,
+            // 见下文 CrashHandler如何能自动上传日志到服务器? {@link https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#crashhandler-3}
+            
         }
     }
 ```  
@@ -62,10 +67,8 @@ me.fantouch.libs
 </application>  
 ```
 
-* 好了,你可以坐等错误报告了.  
-
 ####CrashHandler如何能自动上传日志到服务器?
-* 请根据你与服务器的协议,实现 `SendService`  
+* 请根据你与服务器的交互协议,实现 `SendService`, 示例:
 
 >推荐使用[FinalHttp](https://github.com/yangfuhai/afinal)(me.fantouch.libs已包含FinalHttp)
 
@@ -82,16 +85,16 @@ me.fantouch.libs
             }
             
             FinalHttp fh = new FinalHttp();
-            fh.post("http://192.168.0.163:8888/upload.php", params, new AjaxCallBack<String>() {
+            fh.post("http://server.com/upload.php", params, new AjaxCallBack<String>() {
                 
                 @Override
                 public void onSuccess(String t) {
-                    stopSelf();
+                    stopSelf();// 无论成功还是失败,都应该停止服务
                 }
                 
                 @Override
                 public void onFailure(Throwable t, String strMsg) {
-                    stopSelf();
+                    stopSelf();// 无论成功还是失败,都应该停止服务
             }
             });
             
@@ -108,14 +111,14 @@ me.fantouch.libs
 
 * Eclipse Logcat输出  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/e8f2016e-e8e8-46e1-8b23-3a21442fa75b.jpg?resizeSmall&width=832)  
- * 简单,你只需关心要Log的内容
- * 自动用类名填充TAG
- * 自动Log方法名
- * 自动Log文件名,行号
- * Eclipse的LogCat里面双击,自动转跳到Java文件相应行  
+ * 简单,你只需关心要Log的 **内容**
+ * 自动用类名填充 **TAG**
+ * 自动Log **方法名**
+ * 自动Log **文件名**, **行号**
+ * Eclipse的LogCat里面双击, **转跳到Java文件** 相应行   
  (过段时间再来调试,有没有感觉看不懂log,找不到log语句在哪里?)
- * 可以把日志保存到文件
- * 可以上传日志到服务器  
+ * 可以把 **日志保存** 到文件
+ * 可以 **上传日志** 到服务器  
  
 ###ELog需要权限  
 
@@ -134,7 +137,7 @@ me.fantouch.libs
 如果不启用,ELog将什么都不做,不会耗费系统资源  
 
 ```java
-ELog.setEnableLogCat(true);// 启用Logcat输出
+ELog.setEnableLogcat(true);// 启用Logcat输出
 ```
 * 使用    
 
@@ -194,20 +197,17 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
         AbsUpdateInfoParser parser = new AbsUpdateInfoParser() {
             @Override
             public UpdateInfoBean parse(String info) {
+                
+                // 解析服务器信息 info
+                // ...
+                
                 UpdateInfoBean infoBean = new UpdateInfoBean();
-                // 这里使用Android自带的Json解析服务器返回信息,如果数据复杂,推荐使用Gson
-                try {
-                    JSONObject infoJson = new JSONObject(info).getJSONObject("version");
-                    infoBean.setVersionCode(infoJson.getString("build"));
-                    infoBean.setVersionName(infoJson.getString("version"));
-                    infoBean.setWhatsNew(infoJson.getString("content"));
-                    infoBean.setDownUrl(URL_HOST + "filedownload?showname="
-                            + infoJson.getString("build") + "&filename="
-                            + infoJson.getString("path"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    infoBean = null;
-                }
+                
+                infoBean.setVersionCode("10");
+                infoBean.setVersionName("beta1");
+                infoBean.setWhatsNew("修复了xx bug");
+                infoBean.setDownUrl("http://server.com/xx_beta1.apk");
+                
                 return infoBean;
             }
         };
