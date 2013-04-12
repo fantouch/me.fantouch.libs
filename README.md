@@ -5,17 +5,17 @@ me.fantouch.libs
 **你的Android工程添加本Library依赖,即可使用**  
   
 **含有以下模块**
-* [CrashHandler崩溃处理模块](https://github.com/fantouch/me.fantouch.libs#crashhandler)  
-* [ELog日志模块](https://github.com/fantouch/me.fantouch.libs#elog)  
-* [UpdateHelper自动更新模块](https://github.com/fantouch/me.fantouch.libs#updatehelper)  
-* [AbsSendReportsService文件后台发送模块](https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#abssendreportsservice)
+* [CrashHandler崩溃处理模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
+* [ELog日志模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#elog)  
+* [UpdateHelper自动更新模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
+* [AbsSendReportsService文件后台发送模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
 
 >本Library已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`,  
 你的工程请注意不需要重复包含了.
 
 ================  
 
-##CrashHandler崩溃处理模块
+#CrashHandler崩溃处理模块
 * 崩溃了  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/6e307ff6-15bc-40ea-a3de-c0ebb05733af.jpg?resizeSmall&width=832)  
 
@@ -25,7 +25,7 @@ me.fantouch.libs
 * 服务器收到崩溃报告  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/214cb2a3-eb44-41c0-8527-6536c7c302e9.jpg?resizeSmall&width=832)  
 
-###CrashHandler需要权限  
+##CrashHandler需要权限  
 ```xml  
 <!-- 不依赖Activity的Context弹出Dialog -->
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -36,7 +36,7 @@ me.fantouch.libs
 <!-- 使用网络上传日志 (如果需要上传日志) -->
    <uses-permission android:name="android.permission.INTERNET" />
 ```
-###如何使用CrashHandler  
+##如何使用CrashHandler  
 * 在自定义的MyApplication内注册CrashHandler   
 
 ```java
@@ -68,7 +68,7 @@ me.fantouch.libs
 </application>  
 ```
 
-####CrashHandler如何能自动上传日志到服务器?
+###CrashHandler如何能自动上传日志到服务器?
 * 请根据你与服务器的交互协议,实现 `SendService`, 示例:
 
 >推荐使用[FinalHttp](https://github.com/yangfuhai/afinal)(me.fantouch.libs已包含FinalHttp)
@@ -106,7 +106,7 @@ me.fantouch.libs
 
 ================  
 
-##ELog日志模块
+#ELog日志模块
 * `ELog.d("Hello~~");`  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/39fdd19e-c607-4ad9-b80b-d169f5a979d7.png?resizeSmall&width=832)  
 
@@ -121,16 +121,16 @@ me.fantouch.libs
  * 可以把 **日志保存** 到文件
  * 可以 **上传日志** 到服务器  
  
-###ELog需要权限  
+##ELog需要权限  
 
 ```xml  
 <!-- 检查是否wifi网络  (如果需要上传日志)-->
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 <!-- 使用网络上传日志  (如果需要上传日志)-->
-   <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.INTERNET" />
 ```
-###如何使用ELog  
+##如何使用ELog  
 
 * 开启ELog  
  
@@ -146,13 +146,13 @@ ELog.setEnableLogcat(true);// 启用Logcat输出
 ELog.d("Hello~~");
 ```
 
-####ELog如何保存日志?  
+###ELog如何保存日志?  
 ```java
 // 启用保存日志功能
 // 日志文件在/data/data/com.xxx
 ELog.setEnableLogToFile(true, getApplicationContext());
 ```
-####ELog如何上传日志到服务器?  
+###ELog如何上传日志到服务器?  
 * 启用保存日志功能
 * 然后  
 
@@ -166,7 +166,7 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
 
 ================  
 
-##UpdateHelper自动更新模块
+#UpdateHelper自动更新模块
 * 发现新版本  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/a7ccd1f6-fdaf-4b40-a2d0-bcbdff2b3a41.png?resizeSmall&width=832)  
 
@@ -176,7 +176,7 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
 * 下载完成  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/90d142ba-0d85-4371-b8f6-e418fac3e806.png?resizeSmall&width=832)  
 
-###UpdateHelper需要权限  
+##UpdateHelper需要权限  
 
 ```xml  
    <!-- 使用网络 -->
@@ -186,7 +186,7 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
-###如何使用UpdateHelper
+##如何使用UpdateHelper
 ```java
 // 需要实现 parser 和 normalUpdateListener
  new UpdateHelper(this, parser, normalUpdateListener).check("http://192.168.1.100/checkUpdate.php");
@@ -244,13 +244,13 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
 
 ================  
 
-##AbsSendReportsService文件后台发送模块
+#AbsSendReportsService文件后台发送模块
 通过上文,你应该有注意到这个AbsSendReportsService的使用方法了.  
 这也是一个独立的模块,可以根据需要使用  
 
 >暂未实现队列功能,因此不推荐连续多次调用  
 
-###如何使用
+##如何使用
 ```java
         Intent intent = new Intent(ctx, sendService);// 根据服务器交互协议,实现sendService extends AbsSendReportsService
         intent.putExtra(AbsSendReportsService.INTENT_DIR, "/mnt/sdcard");// 要发送的文件所在目录
