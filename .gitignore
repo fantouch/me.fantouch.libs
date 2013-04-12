@@ -2,3 +2,8 @@
 /bin
 
 .DS_Store
+.classpath
+.project
+ic_launcher-web.png
+proguard-project.txt
+project.properties
