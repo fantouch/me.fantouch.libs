@@ -15,6 +15,9 @@ me.fantouch.libs
   
   
 ***
+*  **如果图片不能显示,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页即可**   
+
+***
 #CrashHandler崩溃处理模块
 * 崩溃了  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/6e307ff6-15bc-40ea-a3de-c0ebb05733af.jpg?resizeSmall&width=832)  
