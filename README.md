@@ -8,7 +8,7 @@ me.fantouch.libs
 
 ================  
 
-##CrashHandler模块
+##CrashHandler崩溃处理模块
 * 程序崩溃了  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/6e307ff6-15bc-40ea-a3de-c0ebb05733af.jpg?resizeSmall&width=832)  
 
@@ -62,7 +62,8 @@ me.fantouch.libs
 
 ####如何能自动上传日志到服务器?
 * 根据你与服务器的协议,实现 `SendService`  
->*推荐使用[FinalHttp](https://github.com/yangfuhai/afinal)(me.fantouch.libs已包含FinalHttp)*  
+
+>推荐使用[FinalHttp](https://github.com/yangfuhai/afinal)(me.fantouch.libs已包含FinalHttp)
 
 ```java
     public class SendService extends AbsSendReportsService {
@@ -78,10 +79,16 @@ me.fantouch.libs
             
             FinalHttp fh = new FinalHttp();
             fh.post("http://192.168.0.163:8888/upload.php", params, new AjaxCallBack<String>() {
+                
                 @Override
                 public void onSuccess(String t) {
                     stopSelf();
                 }
+                
+                @Override
+                public void onFailure(Throwable t, String strMsg) {
+                    stopSelf();
+            }
             });
             
         } 
@@ -91,7 +98,7 @@ me.fantouch.libs
 
 ================  
 
-##ELog模块
+##日志模块ELog
 * `ELog.d("Hello~~");`  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/39fdd19e-c607-4ad9-b80b-d169f5a979d7.png?resizeSmall&width=832)  
 
@@ -109,9 +116,6 @@ me.fantouch.libs
 ###需要权限  
 
 ```xml  
-<!-- 不依赖Activity的Context弹出Dialog -->
-<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-   
 <!-- 检查是否wifi网络  (如果需要上传日志)-->
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -136,12 +140,12 @@ ELog.d("Hello~~");
 
 ####如何保存日志?  
 ```java
-// 启用保存到文件功能
+// 启用保存日志功能
 // 日志文件在/data/data/com.xxx
 ELog.setEnableLogToFile(true, getApplicationContext());
 ```
 ####如何上传日志到服务器?  
-* 根据上文启用保存到文件功能
+* 启用保存日志功能
 * 然后  
 
 ```java
@@ -151,3 +155,84 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
 
 * 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#-3)
 
+
+================  
+
+##UpdateHelper自动更新模块
+* 发现新版本  
+![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/a7ccd1f6-fdaf-4b40-a2d0-bcbdff2b3a41.png?resizeSmall&width=832)  
+
+* 后台下载  
+![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/62c5e4a8-4836-4a04-9912-e58c02210c86.png?resizeSmall&width=832)  
+
+* 下载完成  
+![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/90d142ba-0d85-4371-b8f6-e418fac3e806.png?resizeSmall&width=832)  
+
+###需要权限  
+
+```xml  
+   <!-- 使用网络 -->
+   <uses-permission android:name="android.permission.INTERNET" />
+   
+   <!-- 更新apk文件会下载到sd卡 /mnt/sdcard/com.xxx -->  
+   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
+
+###如何使用
+```java
+// 需要实现 parser 和 normalUpdateListener
+ new UpdateHelper(this, parser, normalUpdateListener).check("http://192.168.1.100/checkUpdate.php");
+```
+* 根据与服务器的交互协议,实现 `parser`.示例:  
+
+```java
+        /** 解析服务器信息,并把信息存入UpdateInfoBean */
+        AbsUpdateInfoParser parser = new AbsUpdateInfoParser() {
+            @Override
+            public UpdateInfoBean parse(String info) {
+                UpdateInfoBean infoBean = new UpdateInfoBean();
+                // 这里使用Android自带的Json解析服务器返回信息,如果数据复杂,推荐使用Gson
+                try {
+                    JSONObject infoJson = new JSONObject(info).getJSONObject("version");
+                    infoBean.setVersionCode(infoJson.getString("build"));
+                    infoBean.setVersionName(infoJson.getString("version"));
+                    infoBean.setWhatsNew(infoJson.getString("content"));
+                    infoBean.setDownUrl(URL_HOST + "filedownload?showname="
+                            + infoJson.getString("build") + "&filename="
+                            + infoJson.getString("path"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    infoBean = null;
+                }
+                return infoBean;
+            }
+        };
+```
+
+* 根据你的业务逻辑,实现 `normalUpdateListener`.示例:   
+
+```java
+        NormalUpdateListener normalUpdateListener = new NormalUpdateListener() {
+            @Override
+            public void onCheckStart() {
+                // 可以在这提示用户正在检查更新
+            }
+
+            @Override
+            public void onDownloadStart() {
+                // 如果用户选择下载更新,这个方法会被调用
+            }
+
+            @Override
+            public void onCheckFinish() {
+                // 检查完成(没有可用更新,或者检查更新中途出现异常)
+                // 例如你是在程序Loading界面进行检查更新,那么现在可以跳过Loading进入程序首页了
+            }
+
+            @Override
+            public void onCancel() {
+                // 用户不想更新,选择了"下次再说"
+                // 例如你是在程序Loading界面进行检查更新,那么现在可以跳过Loading进入程序首页了
+            }
+        };
+```
