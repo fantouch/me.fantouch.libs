@@ -12,9 +12,9 @@ me.fantouch.libs
 
 >本Library已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`,  
 你的工程请注意不需要重复包含了.
-
-================  
-
+  
+  
+***
 #CrashHandler崩溃处理模块
 * 崩溃了  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/6e307ff6-15bc-40ea-a3de-c0ebb05733af.jpg?resizeSmall&width=832)  
@@ -52,7 +52,7 @@ me.fantouch.libs
             CrashHandler.getInstance().init(getApplicationContext(), SendService.class);
             
             // 根据你与服务器的交互协议,实现 SendService,
-            // 见下文 CrashHandler如何能自动上传日志到服务器? {@link https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#crashhandler-3}
+            // 见下文 CrashHandler如何能自动上传日志到服务器? {@link https://github.com/fantouch/me.fantouch.libs#crashhandler-3}
             
         }
     }
@@ -102,10 +102,9 @@ me.fantouch.libs
         } 
     }
 ```
-
-
-================  
-
+  
+  
+***
 #ELog日志模块
 * `ELog.d("Hello~~");`  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/39fdd19e-c607-4ad9-b80b-d169f5a979d7.png?resizeSmall&width=832)  
@@ -159,11 +158,10 @@ ELog.setEnableLogToFile(true, getApplicationContext());
 ELog.sendReportFiles(getApplicationContext(), SendService.class);
 ```
 
-* 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#-3)
-
-
-================  
-
+* 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs#crashhandler-3)  
+  
+  
+***
 #UpdateHelper自动更新模块
 * 发现新版本  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/a7ccd1f6-fdaf-4b40-a2d0-bcbdff2b3a41.png?resizeSmall&width=832)  
@@ -239,9 +237,9 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
             }
         };
 ```
-
-================  
-
+  
+  
+***
 #AbsSendReportsService文件后台发送模块
 通过上文,你应该有注意到这个AbsSendReportsService的使用方法了.  
 这也是一个独立的模块,可以根据需要使用  
@@ -255,4 +253,4 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
         intent.putExtra(AbsSendReportsService.INTENT_EXTENSION, ".log");// 要发送的文件后缀名
         ctx.startService(intent);// 服务启动后,会把指定目录下有指定缀名的文件打包成zip文件发送.
 ```
-* 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#-3)
+* 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs#crashhandler-3)
