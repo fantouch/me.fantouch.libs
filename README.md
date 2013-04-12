@@ -25,7 +25,7 @@ me.fantouch.libs
 * 服务器收到崩溃报告  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/214cb2a3-eb44-41c0-8527-6536c7c302e9.jpg?resizeSmall&width=832)  
 
-##CrashHandler需要权限  
+##CrashHandler需要权限
 ```xml  
 <!-- 不依赖Activity的Context弹出Dialog -->
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -36,7 +36,7 @@ me.fantouch.libs
 <!-- 使用网络上传日志 (如果需要上传日志) -->
    <uses-permission android:name="android.permission.INTERNET" />
 ```
-##如何使用CrashHandler  
+##如何使用CrashHandler
 * 在自定义的MyApplication内注册CrashHandler   
 
 ```java
@@ -121,8 +121,7 @@ me.fantouch.libs
  * 可以把 **日志保存** 到文件
  * 可以 **上传日志** 到服务器  
  
-##ELog需要权限  
-
+##ELog需要权限
 ```xml  
 <!-- 检查是否wifi网络  (如果需要上传日志)-->
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -130,8 +129,7 @@ me.fantouch.libs
 <!-- 使用网络上传日志  (如果需要上传日志)-->
 <uses-permission android:name="android.permission.INTERNET" />
 ```
-##如何使用ELog  
-
+##如何使用ELog
 * 开启ELog  
  
 >建议在`Application`里面执行,或者做一个菜单让用户在需要的时候自行开启  
