@@ -8,6 +8,7 @@ me.fantouch.libs
 * [CrashHandler崩溃处理模块](https://github.com/fantouch/me.fantouch.libs#crashhandler)  
 * [ELog日志模块](https://github.com/fantouch/me.fantouch.libs#elog)  
 * [UpdateHelper自动更新模块](https://github.com/fantouch/me.fantouch.libs#updatehelper)  
+* [AbsSendReportsService文件后台发送模块](https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#abssendreportsservice)
 
 >本Library已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`,  
 你的工程请注意不需要重复包含了.
@@ -240,3 +241,20 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
             }
         };
 ```
+
+================  
+
+##AbsSendReportsService文件后台发送模块
+通过上文,你应该有注意到这个AbsSendReportsService的使用方法了.  
+这也是一个独立的模块,可以根据需要使用  
+
+>暂未实现队列功能,因此不推荐连续多次调用  
+
+###如何使用
+```java
+        Intent intent = new Intent(ctx, sendService);// 根据服务器交互协议,实现sendService extends AbsSendReportsService
+        intent.putExtra(AbsSendReportsService.INTENT_DIR, "/mnt/sdcard");// 要发送的文件所在目录
+        intent.putExtra(AbsSendReportsService.INTENT_EXTENSION, ".log");// 要发送的文件后缀名
+        ctx.startService(intent);// 服务启动后,会把指定目录下有指定缀名的文件打包成zip文件发送.
+```
+* 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs/edit/master/README.md#-3)
