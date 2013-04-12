@@ -164,7 +164,7 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
 ***
 #UpdateHelper自动更新模块
 * 发现新版本  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/a7ccd1f6-fdaf-4b40-a2d0-bcbdff2b3a41.png?resizeSmall&width=832)  
+![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/e2a05596-49c6-4df9-b637-b6db5223ecf3.png?resizeSmall&width=832)  
 
 * 后台下载  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/62c5e4a8-4836-4a04-9912-e58c02210c86.png?resizeSmall&width=832)  
