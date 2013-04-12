@@ -254,3 +254,8 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
         ctx.startService(intent);// 服务启动后,会把指定目录下有指定缀名的文件打包成zip文件发送.
 ```
 * 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs#crashhandler-3)
+  
+  
+***
+#关于作者fantouch
+* 个人博客：[fantouch.Me](http://www.fantouch.me)
