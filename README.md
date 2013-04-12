@@ -19,13 +19,13 @@ me.fantouch.libs
 
 ###需要权限  
 ```xml  
-<-- 不依赖Activity的Context弹出Dialog -->
+<!-- 不依赖Activity的Context弹出Dialog -->
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
    
-<-- 检查是否wifi网络 -->
+<!-- 检查是否wifi网络 -->
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-<-- 使用网络上传日志 -->
+<!-- 使用网络上传日志 -->
    <uses-permission android:name="android.permission.INTERNET" />
 ```
 ###如何使用
