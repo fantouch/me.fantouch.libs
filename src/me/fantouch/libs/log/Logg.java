@@ -15,7 +15,7 @@ import android.util.Log;
  * 示例:<br>
  * 
  * <pre>
- * ELog.v(&quot;Hello World&tilde;&quot;);<p>
+ * Logg.v(&quot;Hello World&tilde;&quot;);<p>
  * LogCat输出:
  * 03-29 16:06:53.657: V/TestActivity(2244): onCreate(): Hello World~    at (TestActivity.java:41)<p>
  * 
@@ -111,7 +111,7 @@ public class Logg extends BasicLog {
         if (elements.length < 5) {
             Log.e(Logg.class.getSimpleName(), "Stack too shallow!!");
             return new String[] {
-                    "", "", ""
+                    "", "", "", ""
             };
         } else {
             String[] s = new String[4];
