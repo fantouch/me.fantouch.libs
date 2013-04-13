@@ -15,7 +15,7 @@ me.fantouch.libs
   
   
 ***
-*  **如果图片不能显示,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页即可**   
+*  如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页即可   
 
 ***
 #CrashHandler崩溃处理模块
@@ -40,7 +40,7 @@ me.fantouch.libs
    <uses-permission android:name="android.permission.INTERNET" />
 ```
 ##如何使用CrashHandler
-* 在自定义的MyApplication内注册CrashHandler   
+* 1/2 在自定义的MyApplication内注册CrashHandler   
 
 ```java
     public class MyApplication extends Application {
@@ -53,7 +53,6 @@ me.fantouch.libs
             
             /* 注册crashHandler,保存日志并自动上传到服务器 */
             CrashHandler.getInstance().init(getApplicationContext(), SendService.class);
-            
             // 根据你与服务器的交互协议,实现 SendService,
             // 见下文 CrashHandler如何能自动上传日志到服务器? {@link https://github.com/fantouch/me.fantouch.libs#crashhandler-3}
             
@@ -61,7 +60,7 @@ me.fantouch.libs
     }
 ```  
 
-* 在 `AndroidManifest.xml` 内注册你的MyApplication   
+* 2/2 在 `AndroidManifest.xml` 内注册你的MyApplication   
 
 ```xml 
 <application
@@ -132,7 +131,7 @@ me.fantouch.libs
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 ##如何使用ELog
-* 开启ELog  
+* 1/2 开启ELog  
  
 >建议在`Application`里面执行,或者做一个菜单让用户在需要的时候自行开启  
 如果不启用,ELog将什么都不做,不会耗费系统资源  
@@ -140,7 +139,7 @@ me.fantouch.libs
 ```java
 ELog.setEnableLogcat(true);// 启用Logcat输出
 ```
-* 使用    
+* 2/2使用    
 
 ```java
 ELog.d("Hello~~");
@@ -185,12 +184,14 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
-##如何使用UpdateHelper
+##如何使用UpdateHelper  
+* 0/2 使用  
+
 ```java
 // 需要实现 parser 和 normalUpdateListener
  new UpdateHelper(this, parser, normalUpdateListener).check("http://192.168.1.100/checkUpdate.php");
 ```
-* 根据与服务器的交互协议,实现 `parser`.示例:  
+* 1/2 根据与服务器的交互协议,实现 `parser`.示例:  
 
 ```java
         /** 解析服务器信息,并把信息存入UpdateInfoBean */
@@ -213,7 +214,7 @@ ELog.sendReportFiles(getApplicationContext(), SendService.class);
         };
 ```
 
-* 根据你的业务逻辑,实现 `normalUpdateListener`.示例:   
+* 2/2 根据你的业务逻辑,实现 `normalUpdateListener`.示例:   
 
 ```java
         NormalUpdateListener normalUpdateListener = new NormalUpdateListener() {
