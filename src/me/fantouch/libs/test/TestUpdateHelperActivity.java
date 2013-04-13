@@ -25,7 +25,7 @@ import org.json.JSONObject;
  * @author Fantouch
  */
 public class TestUpdateHelperActivity extends Activity {
-    private final static String URL_HOST = "http://wz.ue189.cn/";
+    private final static String URL_HOST = "http://218.204.16.48/";
     private final static String URL_CHK_UPDATE = URL_HOST + "android-version.action";
 
     private TextView tv;
