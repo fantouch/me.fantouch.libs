@@ -28,10 +28,6 @@ public class SendService extends AbsSendReportsService {
 
         FinalHttp fh = new FinalHttp();
         fh.post("http://192.168.0.163:8888/upload.php", params, new AjaxCallBack<String>() {
-            @Override
-            public void onStart() {
-                Log.i(TAG, "start");
-            }
 
             @Override
             public void onSuccess(String t) {
