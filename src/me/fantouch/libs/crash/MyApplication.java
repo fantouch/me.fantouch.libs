@@ -4,7 +4,7 @@ package me.fantouch.libs.crash;
 import android.app.Application;
 import android.util.Log;
 
-import me.fantouch.libs.log.ELog;
+import me.fantouch.libs.log.Logg;
 import me.fantouch.libs.test.SendService;
 
 public class MyApplication extends Application {
@@ -18,7 +18,7 @@ public class MyApplication extends Application {
         // 注册crashHandler
         CrashHandler.getInstance().init(getApplicationContext(), SendService.class);
 
-        ELog.setEnableLogcat(true);
-        ELog.setEnableLogToFile(true, getApplicationContext());
+        Logg.setEnableLogcat(true);
+        Logg.setEnableLogToFile(true, getApplicationContext());
     }
 }

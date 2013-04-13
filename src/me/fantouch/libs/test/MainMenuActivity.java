@@ -7,18 +7,18 @@ import android.os.Bundle;
 import android.view.View;
 
 import me.fantouch.libs.R;
-import me.fantouch.libs.log.ELog;
+import me.fantouch.libs.log.Logg;
 
 public class MainMenuActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ELog.d("Hello~~");
+        Logg.d("Hello~~");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        ELog.sendReportFiles(getApplicationContext(), SendService.class);
+        Logg.sendReportFiles(getApplicationContext(), SendService.class);
     }
 
     public void onClick(View v) {

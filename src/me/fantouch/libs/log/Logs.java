@@ -4,11 +4,11 @@ package me.fantouch.libs.log;
 import android.util.Log;
 
 /**
- * (SwitchLog=>SLog)带开关的Log工具,方便发布时一键取消Log.如果总是需要Log信息,则请使用系统自带的{@link Log}
+ * (Logs=>Log with switch)带开关的Log工具,方便发布时一键取消Log.如果总是需要Log信息,则请使用系统自带的{@link Log}
  * 
  * @author Fantouch
  */
-public class SLog extends BasicLog {
+public class Logs extends BasicLog {
 
     public static void d(String TAG, String msg) {
         if (ENABLE_LOGCAT) {

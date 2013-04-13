@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import me.fantouch.libs.R;
-import me.fantouch.libs.log.ELog;
+import me.fantouch.libs.log.Logg;
 
 public class TestLogActivity extends Activity {
     private static final int TEST_TIMES = 1000;
@@ -29,8 +29,8 @@ public class TestLogActivity extends Activity {
         startBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ELog.setEnableLogcat(true);
-                ELog.setEnableLogToFile(toFileChkbox.isChecked(), TestLogActivity.this);
+                Logg.setEnableLogcat(true);
+                Logg.setEnableLogToFile(toFileChkbox.isChecked(), TestLogActivity.this);
                 v.setEnabled(false);
                 tv.append("\n\n");
                 tv.append("Log循环输出" + TEST_TIMES + "次耗时" + TestLog() + "毫秒");
@@ -52,7 +52,7 @@ public class TestLogActivity extends Activity {
     private long TestELog() {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < TEST_TIMES; i++) {
-            ELog.v(i + "");
+            Logg.v(i + "");
         }
         return System.currentTimeMillis() - startTime;
     }
