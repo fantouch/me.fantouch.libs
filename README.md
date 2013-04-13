@@ -6,7 +6,7 @@ me.fantouch.libs
   
 **含有以下模块**
 * [CrashHandler崩溃处理模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
-* [ELog日志模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#elog)  
+* [Logg日志模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#logg)  
 * [UpdateHelper自动更新模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
 * [AbsSendReportsService文件后台发送模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
 
@@ -107,8 +107,8 @@ me.fantouch.libs
   
   
 ***
-#ELog日志模块
-* `ELog.d("Hello~~");`  
+#Logg日志模块
+* `Logg.d("Hello~~");`  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/39fdd19e-c607-4ad9-b80b-d169f5a979d7.png?resizeSmall&width=832)  
 
 * Eclipse Logcat输出  
@@ -122,7 +122,7 @@ me.fantouch.libs
  * 可以把 **日志保存** 到文件
  * 可以 **上传日志** 到服务器  
  
-##ELog需要权限
+##Logg需要权限
 ```xml  
 <!-- 检查是否wifi网络  (如果需要上传日志)-->
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -130,34 +130,34 @@ me.fantouch.libs
 <!-- 使用网络上传日志  (如果需要上传日志)-->
 <uses-permission android:name="android.permission.INTERNET" />
 ```
-##如何使用ELog
-* 1/2 开启ELog  
+##如何使用Logg
+* 1/2 开启Logg  
  
 >建议在`Application`里面执行,或者做一个菜单让用户在需要的时候自行开启  
-如果不启用,ELog将什么都不做,不会耗费系统资源  
+如果不启用,Logg将什么都不做,不会耗费系统资源  
 
 ```java
-ELog.setEnableLogcat(true);// 启用Logcat输出
+Logg.setEnableLogcat(true);// 启用Logcat输出
 ```
 * 2/2使用    
 
 ```java
-ELog.d("Hello~~");
+Logg.d("Hello~~");
 ```
 
-###ELog如何保存日志?  
+###Logg如何保存日志?  
 ```java
 // 启用保存日志功能
 // 日志文件在/data/data/com.xxx
-ELog.setEnableLogToFile(true, getApplicationContext());
+Logg.setEnableLogToFile(true, getApplicationContext());
 ```
-###ELog如何上传日志到服务器?  
+###Logg如何上传日志到服务器?  
 * 启用保存日志功能
 * 然后  
 
 ```java
 // SendService extends AbsSendReportsService
-ELog.sendReportFiles(getApplicationContext(), SendService.class);
+Logg.sendReportFiles(getApplicationContext(), SendService.class);
 ```
 
 * 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs#crashhandler-3)  
