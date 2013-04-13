@@ -1,21 +1,22 @@
 me.fantouch.libs
 ================
 
-**Android Library工程,包含若干模块,使Android开发更方便**  
-**你的Android工程添加本Library依赖,即可使用**  
+**Android Library 工程,包含若干模块,帮助更便捷地进行 Android 开发**  
+**添加本 Library 依赖即可使用**  
+**最低支持 Android 2.1**
   
 **含有以下模块**
-* [CrashHandler崩溃处理模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
-* [Logg日志模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#logg)  
-* [UpdateHelper自动更新模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
-* [AbsSendReportsService文件后台发送模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
+* [CrashHandler 崩溃处理器](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
+* [Logg 日志工具](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#logg)  
+* [UpdateHelper App自动更新助手](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
+* [AbsSendReportsService 文件后台发送服务](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
 
 >本Library已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`,  
 你的工程请注意不需要重复包含了.
   
   
 ***
-*  如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页即可   
+*  如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页   
 
 ***
 #CrashHandler崩溃处理模块
@@ -64,7 +65,7 @@ me.fantouch.libs
 
 ```xml 
 <application
-  android:name="me.fantouch.libs.crash.MyApplication"
+  android:name="com.xxx.MyApplication"
   … >
     <activity> … </activity>
 </application>  
@@ -78,7 +79,7 @@ me.fantouch.libs
 ```java
     public class SendService extends AbsSendReportsService {
         @Override
-        public void sendZipReportsToServer(File reportsZip, NotificationHelper notificationHelper) {
+        public void sendZipReportsToServer(File reportsZip, NotificationHelper notification) {
             
             AjaxParams params = new AjaxParams();
             try {
@@ -90,6 +91,10 @@ me.fantouch.libs
             FinalHttp fh = new FinalHttp();
             fh.post("http://server.com/upload.php", params, new AjaxCallBack<String>() {
                 
+                // 如果你的上传方法可以统计进度,还可以考虑在通知栏更新进度
+                // 更新进度notification.refreshProgress(float)
+                // 发送完毕notification.onSendFinish(AbsSendReportsService)
+                
                 @Override
                 public void onSuccess(String t) {
                     stopSelf();// 无论成功还是失败,都应该停止服务
@@ -98,9 +103,9 @@ me.fantouch.libs
                 @Override
                 public void onFailure(Throwable t, String strMsg) {
                     stopSelf();// 无论成功还是失败,都应该停止服务
-            }
-            });
-            
+                }
+                
+            });   
         } 
     }
 ```
@@ -109,7 +114,7 @@ me.fantouch.libs
 ***
 #Logg日志模块
 * `Logg.d("Hello~~");`  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/39fdd19e-c607-4ad9-b80b-d169f5a979d7.png?resizeSmall&width=832)  
+![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/7e00b65b-6f07-4eaf-8693-92e9d42ec76d.png?resizeSmall&width=832)  
 
 * Eclipse Logcat输出  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/e8f2016e-e8e8-46e1-8b23-3a21442fa75b.jpg?resizeSmall&width=832)  
@@ -139,7 +144,7 @@ me.fantouch.libs
 ```java
 Logg.setEnableLogcat(true);// 启用Logcat输出
 ```
-* 2/2使用    
+* 2/2 使用    
 
 ```java
 Logg.d("Hello~~");
@@ -199,7 +204,7 @@ Logg.sendReportFiles(getApplicationContext(), SendService.class);
             @Override
             public UpdateInfoBean parse(String info) {
                 
-                // 解析服务器信息 info
+                // 解析服务器返回的info
                 // ...
                 
                 UpdateInfoBean infoBean = new UpdateInfoBean();
@@ -255,7 +260,7 @@ Logg.sendReportFiles(getApplicationContext(), SendService.class);
         Intent intent = new Intent(ctx, sendService);// 根据服务器交互协议,实现sendService extends AbsSendReportsService
         intent.putExtra(AbsSendReportsService.INTENT_DIR, "/mnt/sdcard");// 要发送的文件所在目录
         intent.putExtra(AbsSendReportsService.INTENT_EXTENSION, ".log");// 要发送的文件后缀名
-        ctx.startService(intent);// 服务启动后,会把指定目录下有指定缀名的文件打包成zip文件发送.
+        startService(intent);// 服务启动后,会把指定目录下有指定缀名的文件打包成zip文件发送.
 ```
 * 注意,你需要根据你与服务器的协议,实现[SendService](https://github.com/fantouch/me.fantouch.libs#crashhandler-3)
   
