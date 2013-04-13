@@ -1,8 +1,9 @@
 me.fantouch.libs
 ================
 
-**Android Library工程,包含若干模块,使Android开发更方便**  
-**你的Android工程添加本Library依赖,即可使用**  
+**Android Library 工程,包含若干模块,帮助更便捷地进行 Android 开发**  
+**添加本 Library 依赖即可使用**  
+**最低支持 Android 2.1**
   
 **含有以下模块**
 * [CrashHandler 崩溃处理器](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
@@ -15,7 +16,7 @@ me.fantouch.libs
   
   
 ***
-*  如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页即可   
+*  如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页   
 
 ***
 #CrashHandler崩溃处理模块
