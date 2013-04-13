@@ -4,14 +4,13 @@ package me.fantouch.libs.log;
 import android.util.Log;
 
 /**
- * (ExtremLog=>ELog)<br>
  * 可以记录行号,类名,方法名,可是实现双击转跳的Android Log增强工具
  * <p>
  * 直观起见,本工具内部使用+拼接String,编译器会自动优化,<br>
  * 效率与{@link StringBuilder}几乎没差别<br>
  * <p>
  * 性能方面,耗时是{@link Log}的20倍,<br>
- * 因此在App发布前务必关闭DEBUG开关: {@link ELog#disable()}
+ * 因此在App发布前务必关闭DEBUG开关: {@link Logg#disable()}
  * <p>
  * 示例:<br>
  * 
@@ -30,8 +29,8 @@ import android.util.Log;
  * 
  * @author Fantouch
  */
-public class ELog extends BasicLog {
-    private ELog() {
+public class Logg extends BasicLog {
+    private Logg() {
     }
 
     public static void e(String message) {
@@ -110,7 +109,7 @@ public class ELog extends BasicLog {
     private static String[] getTagAndAutoJumpFunctionText() {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
         if (elements.length < 5) {
-            Log.e(ELog.class.getSimpleName(), "Stack too shallow!!");
+            Log.e(Logg.class.getSimpleName(), "Stack too shallow!!");
             return new String[] {
                     "", "", ""
             };
