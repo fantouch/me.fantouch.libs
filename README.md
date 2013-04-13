@@ -5,10 +5,10 @@ me.fantouch.libs
 **你的Android工程添加本Library依赖,即可使用**  
   
 **含有以下模块**
-* [CrashHandler崩溃处理模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
-* [Logg日志模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#logg)  
-* [UpdateHelper自动更新模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
-* [AbsSendReportsService文件后台发送模块](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
+* [CrashHandler 崩溃处理器](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
+* [Logg 日志工具](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#logg)  
+* [UpdateHelper App自动更新助手](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
+* [AbsSendReportsService 文件后台发送服务](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
 
 >本Library已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`,  
 你的工程请注意不需要重复包含了.
