@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <!-- 带游标的RadioGroup -->
+    <declare-styleable name="IndicativeRadioGroup">
+        <!-- 游标图片资源id -->
+        <attr name="indicatorDrawable" format="reference"></attr>
+        <attr name="radioGroup" format="reference"></attr>
+    </declare-styleable>
+</resources>

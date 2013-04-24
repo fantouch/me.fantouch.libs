@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fantouch="http://schemas.android.com/apk/res/me.fantouch.libs"
+    android:layout_width="fill_parent"
+    android:background="@android:color/background_light"
+    android:layout_height="fill_parent" >
+
+    <me.fantouch.libs.indicativeradio.IndicativeRadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        fantouch:indicatorDrawable="@drawable/indicativeradio_default_indicator"
+        fantouch:radioGroup="@layout/indicativeradio_radiogp" />
+
+</RelativeLayout>

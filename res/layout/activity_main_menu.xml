@@ -31,5 +31,13 @@
         android:layout_centerHorizontal="true"
         android:onClick="onClick"
         android:text="Crash自定义处理模块" />
+    <Button
+        android:layout_below="@id/crash"
+        android:id="@+id/indicativeRadioGp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClick"
+        android:text="IndicativeRadioGp" />
 
 </RelativeLayout>
