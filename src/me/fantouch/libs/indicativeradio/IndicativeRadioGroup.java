@@ -48,26 +48,37 @@ public class IndicativeRadioGroup extends RelativeLayout {
     private void initAttributes(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndicativeRadioGroup);
 
-        mRadioGroupLayoutId = a.getResourceId(R.styleable.IndicativeRadioGroup_radioGroup,
-                View.NO_ID);
-        if (mRadioGroupLayoutId == View.NO_ID)
-            throw new InvalidParameterException(
-                    "you must assign radioGroup for IndicativeRadioGroup in xml");
-        mIndicatorImgResId = a.getResourceId(
-                R.styleable.IndicativeRadioGroup_indicatorDrawable,
-                R.drawable.indicativeradio_default_indicator);
+        int n = a.getIndexCount();
+        for (int i = 0; i < n; i++) {
+            int attr = a.getIndex(i);
 
-        mIndicatorMoveAnimationDuration = a.getInt(
-                R.styleable.IndicativeRadioGroup_indicatorMoveAnimationDuration, 500);
+            switch (attr) {
+                case R.styleable.IndicativeRadioGroup_radioGroup:
+                    setRadioGroup(a.getResourceId(attr, View.NO_ID));
+                    break;
+                case R.styleable.IndicativeRadioGroup_indicatorDrawable:
+                    setIndicator(a
+                            .getResourceId(attr, R.drawable.indicativeradio_default_indicator));
+                    break;
+                case R.styleable.IndicativeRadioGroup_indicatorMoveAnimationDuration:
+                    setIndicatorMoveAnimationDuration(a.getInt(attr, 500));
+                    break;
+                case R.styleable.IndicativeRadioGroup_indicatorRestoreAnimationDuration:
+                    setIndicatorRestoreAnimationDuration(a.getInt(attr, 1500));
+                    break;
+                case R.styleable.IndicativeRadioGroup_hideAnimation:
+                    setHideAnimation(AnimationUtils.loadAnimation(context,
+                            a.getResourceId(attr, R.anim.indicativeradio_hide)));
+                    break;
+                case R.styleable.IndicativeRadioGroup_showAnimation:
+                    setShowAnimation(AnimationUtils.loadAnimation(context,
+                            a.getResourceId(attr, R.anim.indicativeradio_show)));
+                    break;
 
-        mIndicatorRestoreAnimationDuration = a.getInt(
-                R.styleable.IndicativeRadioGroup_indicatorRestoreAnimationDuration, 1500);
-
-        mHideAnimation = AnimationUtils.loadAnimation(context, a.getResourceId(
-                R.styleable.IndicativeRadioGroup_hideAnimation, R.anim.indicativeradio_hide));
-
-        mShowAnimation = AnimationUtils.loadAnimation(context, a.getResourceId(
-                R.styleable.IndicativeRadioGroup_showAnimation, R.anim.indicativeradio_show));
+                default:
+                    break;
+            }
+        }
 
         a.recycle();
     }
@@ -75,6 +86,10 @@ public class IndicativeRadioGroup extends RelativeLayout {
     // BEGIN >>>>>>>>>>>> set attributes by code
 
     public void setRadioGroup(int radioGpLayoutId) {
+        if (radioGpLayoutId == View.NO_ID)
+            throw new InvalidParameterException(
+                    "you must assign radioGroup for IndicativeRadioGroup in xml or in code");
+
         mRadioGroupLayoutId = radioGpLayoutId;
     }
 
