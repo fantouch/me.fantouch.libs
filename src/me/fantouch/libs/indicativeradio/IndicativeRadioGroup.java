@@ -41,8 +41,10 @@ public class IndicativeRadioGroup extends RelativeLayout {
         initAttributes(context, attrs);
     }
 
-    public IndicativeRadioGroup(Context context) {
+    public IndicativeRadioGroup(Context context, int radioGroupLayoutId) {
         super(context);
+
+        mRadioGroupLayoutId = radioGroupLayoutId;
     }
 
     private void initAttributes(Context context, AttributeSet attrs) {
@@ -86,9 +88,10 @@ public class IndicativeRadioGroup extends RelativeLayout {
     // BEGIN >>>>>>>>>>>> set attributes by code
 
     public void setRadioGroup(int radioGpLayoutId) {
-        if (radioGpLayoutId == View.NO_ID)
+        if (radioGpLayoutId == View.NO_ID) {
             throw new InvalidParameterException(
                     "you must assign radioGroup for IndicativeRadioGroup in xml or in code");
+        }
 
         mRadioGroupLayoutId = radioGpLayoutId;
     }
