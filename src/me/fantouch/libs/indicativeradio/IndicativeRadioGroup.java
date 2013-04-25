@@ -4,12 +4,16 @@ package me.fantouch.libs.indicativeradio;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 
 import me.fantouch.libs.R;
@@ -17,63 +21,221 @@ import me.fantouch.libs.R;
 import java.security.InvalidParameterException;
 
 public class IndicativeRadioGroup extends RelativeLayout {
-    private ImageView indicatator;
-    private RadioGroup radioGroup;
+    private int mIndicatorImgResId;
+    private ImageView mIndicatator;
+    private int mRadioGroupLayoutId;
+    private RadioGroup mRadioGroup;
+    private OnCheckedChangeListener mUsersOnCheckedChangeListener;
+    private Animation mHideAnimation;
+    private Animation mShowAnimation;
+    private int mIndicatorMoveAnimationDuration;
+    private int mIndicatorRestoreAnimationDuration;
 
     public IndicativeRadioGroup(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initFromAttributes(context, attrs);
+        initAttributes(context, attrs);
     }
 
     public IndicativeRadioGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initFromAttributes(context, attrs);
+        initAttributes(context, attrs);
     }
 
     public IndicativeRadioGroup(Context context) {
         super(context);
-
     }
 
-    private void initFromAttributes(Context context, AttributeSet attrs) {
-
+    private void initAttributes(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndicativeRadioGroup);
 
-        int radioGroupLayoutId = a.getResourceId(R.styleable.IndicativeRadioGroup_radioGroup, -1);
-        if (radioGroupLayoutId == -1)
+        mRadioGroupLayoutId = a.getResourceId(R.styleable.IndicativeRadioGroup_radioGroup,
+                View.NO_ID);
+        if (mRadioGroupLayoutId == View.NO_ID)
             throw new InvalidParameterException(
                     "you must assign radioGroup for IndicativeRadioGroup in xml");
-        LayoutInflater.from(context).inflate(radioGroupLayoutId, this, true);
-
-        final int indicatorImgResId = a.getResourceId(
+        mIndicatorImgResId = a.getResourceId(
                 R.styleable.IndicativeRadioGroup_indicatorDrawable,
                 R.drawable.indicativeradio_default_indicator);
-        for (int i = 0; i < getChildCount(); i++) {
-            final View view = getChildAt(i);
-            if (view instanceof RadioGroup) {
-                view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        int indicatorWith = (int) (view.getWidth() * 1.0 / ((RadioGroup) view)
-                                .getChildCount());
-                        addIndicator(indicatorImgResId, indicatorWith);
-                    }
-                });
-                break;
-            }
-        }
+
+        mIndicatorMoveAnimationDuration = a.getInt(
+                R.styleable.IndicativeRadioGroup_indicatorMoveAnimationDuration, 500);
+
+        mIndicatorRestoreAnimationDuration = a.getInt(
+                R.styleable.IndicativeRadioGroup_indicatorRestoreAnimationDuration, 1500);
+
+        mHideAnimation = AnimationUtils.loadAnimation(context, a.getResourceId(
+                R.styleable.IndicativeRadioGroup_hideAnimation, R.anim.indicativeradio_hide));
+
+        mShowAnimation = AnimationUtils.loadAnimation(context, a.getResourceId(
+                R.styleable.IndicativeRadioGroup_showAnimation, R.anim.indicativeradio_show));
 
         a.recycle();
     }
 
+    // BEGIN >>>>>>>>>>>> set attributes by code
+
+    public void setRadioGroup(int radioGpLayoutId) {
+        mRadioGroupLayoutId = radioGpLayoutId;
+    }
+
+    public void setIndicator(int resIdOfDrawableOrColor) {
+        mIndicatorImgResId = resIdOfDrawableOrColor;
+    }
+
+    public void setIndicatorMoveAnimationDuration(int durationInMillisecond) {
+        mIndicatorMoveAnimationDuration = durationInMillisecond;
+    }
+
+    public void setIndicatorRestoreAnimationDuration(int durationInMillisecond) {
+        mIndicatorRestoreAnimationDuration = durationInMillisecond;
+    }
+
+    public void setHideAnimation(Animation anim) {
+        mHideAnimation = anim;
+    }
+
+    public void setShowAnimation(Animation anim) {
+        mShowAnimation = anim;
+    }
+
+    // END <<<<<<<<<<<< set attributes by code
+
+    public void setOnCheckedChangeListener(OnCheckedChangeListener l) {
+        mUsersOnCheckedChangeListener = l;
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        addRadioGp();
+        super.onFinishInflate();
+    }
+
+    private void addRadioGp() {
+        mRadioGroup = (RadioGroup) View.inflate(getContext(), mRadioGroupLayoutId, null);
+        mRadioGroup.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mRadioGroup.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                int indicatorWith = (int) (mRadioGroup.getWidth() * 1.0 / mRadioGroup
+                        .getChildCount());
+                addIndicator(mIndicatorImgResId, indicatorWith);
+            }
+        });
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
+                LayoutParams.FILL_PARENT);
+        addView(mRadioGroup, lp);
+
+        mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                invokeUsersOnCheckedChangeListener(group, checkedId);
+                moveIndicator();
+            }
+        });
+    }
+
     private void addIndicator(int indicatorImgResId, int indicatorWith) {
-        ImageView indicator = new ImageView(getContext());
+        mIndicatator = new ImageView(getContext());
+        mIndicatator.setImageResource(indicatorImgResId);
+        mIndicatator.setScaleType(ScaleType.FIT_XY);
+
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(indicatorWith,
                 LayoutParams.FILL_PARENT);
-        indicator.setImageResource(indicatorImgResId);
-        indicator.setScaleType(ScaleType.FIT_XY);
-        addView(indicator, lp);
+
+        addView(mIndicatator, lp);
+    }
+
+    private void invokeUsersOnCheckedChangeListener(RadioGroup group, int checkedId) {
+        if (mUsersOnCheckedChangeListener != null) {
+            mUsersOnCheckedChangeListener.onCheckedChanged(group, checkedId);
+        }
+    }
+
+    private int mIndicatorStartXForNextMove = 0;
+
+    private void moveIndicator() {
+        int mIndicatorEndX = mIndicatator.getWidth() * getCheckedIdx();
+        TranslateAnimation anim = new TranslateAnimation(mIndicatorStartXForNextMove,
+                mIndicatorEndX, 0, 0);
+        mIndicatorStartXForNextMove = mIndicatorEndX;// 下次起始位置就是现在的结束位置
+        anim.setDuration(mIndicatorMoveAnimationDuration);
+        anim.setInterpolator(new OvershootInterpolator());
+        anim.setFillAfter(true);
+        mIndicatator.startAnimation(anim);
+    }
+
+    private void restoreIndicatatorPosition() {
+        TranslateAnimation anim = new TranslateAnimation(-mIndicatator.getWidth(),
+                getCheckedIdx() * mIndicatator.getWidth(), 0, 0);
+        anim.setDuration(mIndicatorRestoreAnimationDuration);
+        anim.setInterpolator(new OvershootInterpolator());
+        anim.setFillAfter(true);
+        mIndicatator.startAnimation(anim);
+    }
+
+    private int getCheckedIdx() {
+        int idx = 0;
+        for (int i = 0; i < mRadioGroup.getChildCount(); i++) {
+            if (mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()) {
+                idx = i;
+                break;
+            }
+        }
+        return idx;
+    }
+
+    /**
+     * 隐藏本控件,你可以通过{@link IndicativeRadioGroup#setHideAnimation(Animation)}自定义动画
+     */
+    public void hide() {
+        if (IndicativeRadioGroup.this.getVisibility() == View.VISIBLE) {
+
+            if (mHideAnimation == null) {
+                IndicativeRadioGroup.this.setVisibility(View.GONE);
+                return;
+            }
+
+            new AnimPerformer(IndicativeRadioGroup.this, mHideAnimation) {
+                @Override
+                public void onAnimStart(View v) {
+                }
+
+                @Override
+                public void onAnimEnd(View v) {
+                    IndicativeRadioGroup.this.clearAnimation();
+                    IndicativeRadioGroup.this.setVisibility(View.GONE);
+                }
+            }.start();
+        }
+    }
+
+    /**
+     * 显示本控件,你可以通过{@link IndicativeRadioGroup#setShowAnimation(Animation)}自定义动画
+     */
+    public void show() {
+        if (IndicativeRadioGroup.this.getVisibility() != View.VISIBLE) {
+
+            IndicativeRadioGroup.this.setVisibility(View.VISIBLE);
+            if (mShowAnimation == null) {
+                restoreIndicatatorPosition();
+                return;
+            }
+
+            mShowAnimation.setFillAfter(true);
+            new AnimPerformer(IndicativeRadioGroup.this, mShowAnimation) {
+                @Override
+                public void onAnimStart(View v) {
+                    mIndicatator.clearAnimation();
+                    mIndicatator.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimEnd(View v) {
+                    IndicativeRadioGroup.this.clearAnimation();
+                    restoreIndicatatorPosition();
+                }
+            }.start();
+        }
     }
 
 }

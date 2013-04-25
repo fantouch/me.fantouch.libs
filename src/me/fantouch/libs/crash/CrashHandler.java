@@ -87,6 +87,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         if (mDefaultHandler == null || ex == null) {
             exitCurrentApp();
         } else {
+            ex.printStackTrace();
             new Thread() {
                 @Override
                 public void run() {

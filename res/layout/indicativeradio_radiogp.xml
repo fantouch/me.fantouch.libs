@@ -1,75 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-  android:background="@drawable/indicativeradio_default_radiogp_bg" 
+    android:background="@drawable/indicativeradio_default_radiogp_bg"
     android:orientation="horizontal" >
-
 
     <RadioButton
         android:id="@+id/radio_1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:button="@null"
+        style="@style/IndicativeRadioGpBtn"
         android:checked="true"
-        android:drawableTop="@drawable/indicativeradio_default_radio_drawtop_selector"
-        android:gravity="center_horizontal|bottom"
-        android:singleLine="true"
-        android:text="首页1"
-        android:textSize="10sp" />
+        android:text="首页1" />
 
     <RadioButton
         android:id="@+id/radio_2"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:button="@null"
-        android:drawableTop="@drawable/indicativeradio_default_radio_drawtop_selector"
-        android:gravity="center_horizontal|bottom"
-        android:singleLine="true"
-        android:text="首页2"
-        android:textSize="10sp" />
+        style="@style/IndicativeRadioGpBtn"
+        android:text="首页2" />
 
     <RadioButton
         android:id="@+id/radio_3"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:button="@null"
-        android:drawableTop="@drawable/indicativeradio_default_radio_drawtop_selector"
-        android:gravity="center_horizontal|bottom"
-        android:singleLine="true"
-        android:text="首页3"
-        android:textSize="10sp" />
+        style="@style/IndicativeRadioGpBtn"
+        android:text="首页3" />
 
     <RadioButton
         android:id="@+id/radio_4"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:button="@null"
-        android:drawableTop="@drawable/indicativeradio_default_radio_drawtop_selector"
-        android:gravity="center_horizontal|bottom"
-        android:singleLine="true"
-        android:text="首页4"
-        android:textSize="10sp" />
+        style="@style/IndicativeRadioGpBtn"
+        android:text="首页4" />
 
     <RadioButton
         android:id="@+id/radio_5"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:button="@null"
-        android:drawableTop="@drawable/indicativeradio_default_radio_drawtop_selector"
-        android:gravity="center_horizontal|bottom"
-        android:singleLine="true"
-        android:text="首页5"
-        android:textSize="10sp" />
+        style="@style/IndicativeRadioGpBtn"
+        android:text="首页5" />
 
 </RadioGroup>

@@ -2,13 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fantouch="http://schemas.android.com/apk/res/me.fantouch.libs"
     android:layout_width="fill_parent"
-    android:background="@android:color/background_light"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@android:color/background_light" >
+
+    <Button
+        android:id="@+id/hide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:onClick="onClick"
+        android:text="hide" />
+
+    <Button
+        android:id="@+id/show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hide"
+        android:layout_centerInParent="true"
+        android:onClick="onClick"
+        android:text="show" />
 
     <me.fantouch.libs.indicativeradio.IndicativeRadioGroup
+        android:id="@+id/mIndicativeRadioGroup"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        fantouch:hideAnimation="@anim/indicativeradio_hide"
         fantouch:indicatorDrawable="@drawable/indicativeradio_default_indicator"
-        fantouch:radioGroup="@layout/indicativeradio_radiogp" />
+        fantouch:indicatorMoveAnimationDuration="500"
+        fantouch:indicatorRestoreAnimationDuration="1500"
+        fantouch:radioGroup="@layout/indicativeradio_radiogp"
+        fantouch:showAnimation="@anim/indicativeradio_show" />
 
 </RelativeLayout>

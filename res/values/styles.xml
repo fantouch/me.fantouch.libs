@@ -1,3 +1,15 @@
 <resources>
 
+    <style name="IndicativeRadioGpBtn" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawableTop">@drawable/indicativeradio_default_radio_drawtop_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 </resources>

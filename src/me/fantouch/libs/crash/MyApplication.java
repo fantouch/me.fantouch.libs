@@ -5,6 +5,7 @@ import android.app.Application;
 import android.util.Log;
 
 import me.fantouch.libs.log.Logg;
+import me.fantouch.libs.test.SendService;
 
 public class MyApplication extends Application {
     private final static String TAG = MyApplication.class.getSimpleName();
@@ -15,7 +16,7 @@ public class MyApplication extends Application {
         super.onCreate();
 
         // 注册crashHandler
-        // CrashHandler.getInstance().init(getApplicationContext(), SendService.class);
+        CrashHandler.getInstance().init(getApplicationContext(), SendService.class);
 
         Logg.setEnableLogcat(true);
         Logg.setEnableLogToFile(true, getApplicationContext());
