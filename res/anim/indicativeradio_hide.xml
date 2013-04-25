@@ -19,13 +19,13 @@
     android:fillAfter="true" >
 
     <translate
-        android:duration="150"
+        android:duration="250"
         android:fromYDelta="0%"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:toYDelta="100%" />
 
     <alpha
-        android:duration="250"
+        android:duration="200"
         android:fromAlpha="1.0"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:toAlpha="0.0" />

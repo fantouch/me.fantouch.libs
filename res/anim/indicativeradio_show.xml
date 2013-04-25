@@ -19,7 +19,7 @@
 
     <translate
         
-        android:duration="300"
+        android:duration="250"
         android:fromYDelta="100%"
         android:interpolator="@android:anim/overshoot_interpolator"
         android:toYDelta="0%" />
