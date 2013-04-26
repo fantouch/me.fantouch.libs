@@ -41,6 +41,12 @@ public class IndicativeRadioGroup extends RelativeLayout {
         initAttributes(context, attrs);
     }
 
+    /**
+     * 用代码的方式构造此控件
+     * 
+     * @param context
+     * @param radioGroupLayoutId 必须传入一个RadioGroup的layoutID
+     */
     public IndicativeRadioGroup(Context context, int radioGroupLayoutId) {
         super(context);
 
@@ -86,10 +92,9 @@ public class IndicativeRadioGroup extends RelativeLayout {
     // BEGIN >>>>>>>>>>>> set attributes by code
 
     public void setRadioGroup(int radioGpLayoutId) {
-        if (radioGpLayoutId == View.NO_ID) {
+        if (radioGpLayoutId == View.NO_ID)
             throw new InvalidParameterException(
                     "you must assign radioGroup for IndicativeRadioGroup in xml or in code");
-        }
 
         mRadioGroupLayoutId = radioGpLayoutId;
     }
