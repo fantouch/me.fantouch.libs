@@ -67,12 +67,10 @@ public class IndicativeRadioGroup extends RelativeLayout {
                     setIndicatorRestoreAnimationDuration(a.getInt(attr, 1500));
                     break;
                 case R.styleable.IndicativeRadioGroup_hideAnimation:
-                    setHideAnimation(AnimationUtils.loadAnimation(context,
-                            a.getResourceId(attr, R.anim.indicativeradio_hide)));
+                    setHideAnimation(a.getResourceId(attr, R.anim.indicativeradio_hide));
                     break;
                 case R.styleable.IndicativeRadioGroup_showAnimation:
-                    setShowAnimation(AnimationUtils.loadAnimation(context,
-                            a.getResourceId(attr, R.anim.indicativeradio_show)));
+                    setShowAnimation(a.getResourceId(attr, R.anim.indicativeradio_show));
                     break;
 
                 default:
@@ -109,8 +107,16 @@ public class IndicativeRadioGroup extends RelativeLayout {
         mHideAnimation = anim;
     }
 
+    public void setHideAnimation(int animResId) {
+        mHideAnimation = AnimationUtils.loadAnimation(getContext(), animResId);
+    }
+
     public void setShowAnimation(Animation anim) {
         mShowAnimation = anim;
+    }
+
+    public void setShowAnimation(int animResId) {
+        mShowAnimation = AnimationUtils.loadAnimation(getContext(), animResId);
     }
 
     // END <<<<<<<<<<<< set attributes by code
