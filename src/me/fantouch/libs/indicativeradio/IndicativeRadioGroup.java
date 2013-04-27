@@ -226,15 +226,11 @@ public class IndicativeRadioGroup extends RelativeLayout {
 
             new AnimPerformer(IndicativeRadioGroup.this, mHideAnimation) {
                 @Override
-                public void onAnimStart(View v) {
-                }
-
-                @Override
-                public void onAnimEnd(View v) {
+                public void onAnimEnd() {
                     IndicativeRadioGroup.this.clearAnimation();
                     IndicativeRadioGroup.this.setVisibility(View.GONE);
                 }
-            }.start();
+            };
         }
     }
 
@@ -243,28 +239,27 @@ public class IndicativeRadioGroup extends RelativeLayout {
      */
     public void show() {
         if (IndicativeRadioGroup.this.getVisibility() != View.VISIBLE) {
-
             IndicativeRadioGroup.this.setVisibility(View.VISIBLE);
+
             if (mShowAnimation == null) {
                 restoreIndicatatorPosition();
                 return;
             }
-
             mShowAnimation.setFillAfter(true);
+
             new AnimPerformer(IndicativeRadioGroup.this, mShowAnimation) {
                 @Override
-                public void onAnimStart(View v) {
+                public void onAnimStart() {
                     mIndicatator.clearAnimation();
                     mIndicatator.setVisibility(View.GONE);
-                }
+                };
 
                 @Override
-                public void onAnimEnd(View v) {
+                public void onAnimEnd() {
                     IndicativeRadioGroup.this.clearAnimation();
                     restoreIndicatatorPosition();
                 }
-            }.start();
+            };
         }
     }
-
 }
