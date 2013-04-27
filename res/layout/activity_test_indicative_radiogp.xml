@@ -31,7 +31,41 @@
         fantouch:indicatorDrawable="@drawable/indicativeradio_default_indicator"
         fantouch:indicatorMoveAnimationDuration="500"
         fantouch:indicatorRestoreAnimationDuration="1500"
-        fantouch:radioGroup="@layout/indicativeradio_radiogp"
-        fantouch:showAnimation="@anim/indicativeradio_show" />
+        fantouch:showAnimation="@anim/indicativeradio_show" >
+
+        <RadioGroup
+            android:id="@id/indivativeRadioGp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/indicativeradio_default_radiogp_bg"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_1"
+                style="@style/IndicativeRadioGpBtn"
+                android:checked="true"
+                android:text="首页1" />
+
+            <RadioButton
+                android:id="@+id/radio_2"
+                style="@style/IndicativeRadioGpBtn"
+                android:text="首页2" />
+
+            <RadioButton
+                android:id="@+id/radio_3"
+                style="@style/IndicativeRadioGpBtn"
+                android:text="首页3" />
+
+            <RadioButton
+                android:id="@+id/radio_4"
+                style="@style/IndicativeRadioGpBtn"
+                android:text="首页4" />
+
+            <RadioButton
+                android:id="@+id/radio_5"
+                style="@style/IndicativeRadioGpBtn"
+                android:text="首页5" />
+        </RadioGroup>
+    </me.fantouch.libs.indicativeradio.IndicativeRadioGroup>
 
 </RelativeLayout>

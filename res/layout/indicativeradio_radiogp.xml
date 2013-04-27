@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="60dp"
     android:background="@drawable/indicativeradio_default_radiogp_bg"
     android:orientation="horizontal" >
 

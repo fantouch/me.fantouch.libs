@@ -6,8 +6,6 @@
 
         <!-- 游标图片资源id,默认淡蓝底部射灯效果 -->
         <attr name="indicatorDrawable" format="reference|color"></attr>
-        <!-- 必选,你的RadioGroup -->
-        <attr name="radioGroup" format="reference"></attr>
         <!-- 游标平移动画时长,单位毫秒,默认值500 -->
         <attr name="indicatorMoveAnimationDuration" format="integer"></attr>
         <!-- 恢复游标动画时长,单位毫秒,默认值1500 -->

@@ -39,5 +39,13 @@
         android:layout_centerHorizontal="true"
         android:onClick="onClick"
         android:text="IndicativeRadioGp" />
+    <Button
+        android:layout_below="@id/indicativeRadioGp"
+        android:id="@+id/indicativeRadioGpByCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClick"
+        android:text="IndicativeRadioGpByCode" />
 
 </RelativeLayout>

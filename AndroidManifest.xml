@@ -43,6 +43,10 @@
             android:name="me.fantouch.libs.test.TestIndicativeRadioGp"
             android:label="带游标的RadioGroup" >
         </activity>
+        <activity
+            android:name="me.fantouch.libs.test.TestIndicativeRadioGpByCode"
+            android:label="带游标的RadioGroup" >
+        </activity>
 
         <service android:name="me.fantouch.libs.test.SendService" >
         </service>

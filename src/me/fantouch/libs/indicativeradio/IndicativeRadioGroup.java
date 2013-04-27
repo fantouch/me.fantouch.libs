@@ -18,8 +18,6 @@ import android.widget.RelativeLayout;
 
 import me.fantouch.libs.R;
 
-import java.security.InvalidParameterException;
-
 public class IndicativeRadioGroup extends RelativeLayout {
     private int mIndicatorImgResId;
     private ImageView mIndicatator;
@@ -45,12 +43,24 @@ public class IndicativeRadioGroup extends RelativeLayout {
      * 用代码的方式构造此控件
      * 
      * @param context
-     * @param radioGroupLayoutId 必须传入一个RadioGroup的layoutID
+     * @param radioGroupLayoutId RadioGroup的layoutID
      */
     public IndicativeRadioGroup(Context context, int radioGroupLayoutId) {
         super(context);
+        mRadioGroup = (RadioGroup) View.inflate(context, radioGroupLayoutId, null);
+        addRadioGp();
+    }
 
-        mRadioGroupLayoutId = radioGroupLayoutId;
+    /**
+     * 用代码的方式构造此控件
+     * 
+     * @param context
+     * @param gp
+     */
+    public IndicativeRadioGroup(Context context, RadioGroup gp) {
+        super(context);
+        mRadioGroup = gp;
+        addRadioGp();
     }
 
     private void initAttributes(Context context, AttributeSet attrs) {
@@ -61,9 +71,6 @@ public class IndicativeRadioGroup extends RelativeLayout {
             int attr = a.getIndex(i);
 
             switch (attr) {
-                case R.styleable.IndicativeRadioGroup_radioGroup:
-                    setRadioGroup(a.getResourceId(attr, View.NO_ID));
-                    break;
                 case R.styleable.IndicativeRadioGroup_indicatorDrawable:
                     setIndicator(a
                             .getResourceId(attr, R.drawable.indicativeradio_default_indicator));
@@ -90,14 +97,6 @@ public class IndicativeRadioGroup extends RelativeLayout {
     }
 
     // BEGIN >>>>>>>>>>>> set attributes by code
-
-    public void setRadioGroup(int radioGpLayoutId) {
-        if (radioGpLayoutId == View.NO_ID)
-            throw new InvalidParameterException(
-                    "you must assign radioGroup for IndicativeRadioGroup in xml or in code");
-
-        mRadioGroupLayoutId = radioGpLayoutId;
-    }
 
     public void setIndicator(int resIdOfDrawableOrColor) {
         mIndicatorImgResId = resIdOfDrawableOrColor;
@@ -140,7 +139,15 @@ public class IndicativeRadioGroup extends RelativeLayout {
     }
 
     private void addRadioGp() {
-        mRadioGroup = (RadioGroup) View.inflate(getContext(), mRadioGroupLayoutId, null);
+        if (mRadioGroup == null) {// 从xml获取RadioGroup
+            mRadioGroup = (RadioGroup) findViewById(R.id.indivativeRadioGp);
+            if (mRadioGroup == null)
+                throw new RuntimeException(
+                        "Your IndicativeRadioGroup must have a RadioGroup whose id attribute is "
+                                + "'me.fantouch.R.id.indivativeRadioGp'");
+        } else {
+            addView(mRadioGroup);
+        }
         mRadioGroup.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -150,9 +157,6 @@ public class IndicativeRadioGroup extends RelativeLayout {
                 addIndicator(mIndicatorImgResId, indicatorWith);
             }
         });
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.FILL_PARENT);
-        addView(mRadioGroup, lp);
 
         mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override

@@ -10,6 +10,7 @@ import me.fantouch.libs.indicativeradio.IndicativeRadioGroup;
 
 public class TestIndicativeRadioGp extends Activity {
     private IndicativeRadioGroup mIndicativeRadioGroup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

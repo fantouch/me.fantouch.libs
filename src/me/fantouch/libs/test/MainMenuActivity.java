@@ -31,6 +31,8 @@ public class MainMenuActivity extends Activity {
             startActivity(new Intent(this, TestCrashActivity.class));
         } else if (id == R.id.indicativeRadioGp) {
             startActivity(new Intent(this, TestIndicativeRadioGp.class));
+        } else if (id == R.id.indicativeRadioGpByCode) {
+            startActivity(new Intent(this, TestIndicativeRadioGpByCode.class));
         }
 
     }
