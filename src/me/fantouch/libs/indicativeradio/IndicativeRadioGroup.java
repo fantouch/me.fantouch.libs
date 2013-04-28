@@ -21,7 +21,6 @@ import me.fantouch.libs.R;
 public class IndicativeRadioGroup extends RelativeLayout {
     private int mIndicatorImgResId;
     private ImageView mIndicatator;
-    private int mRadioGroupLayoutId;
     private RadioGroup mRadioGroup;
     private OnCheckedChangeListener mUsersOnCheckedChangeListener;
     private Animation mHideAnimation;
@@ -31,39 +30,37 @@ public class IndicativeRadioGroup extends RelativeLayout {
 
     public IndicativeRadioGroup(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initAttributes(context, attrs);
+        initAttributesFromXml(context, attrs);
     }
 
     public IndicativeRadioGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttributes(context, attrs);
+        initAttributesFromXml(context, attrs);
     }
 
-    /**
-     * 用代码的方式构造此控件
-     * 
-     * @param context
-     * @param radioGroupLayoutId RadioGroup的layoutID
-     */
     public IndicativeRadioGroup(Context context, int radioGroupLayoutId) {
         super(context);
         mRadioGroup = (RadioGroup) View.inflate(context, radioGroupLayoutId, null);
+        initAttributesFromCode();
         addRadioGp();
     }
 
-    /**
-     * 用代码的方式构造此控件
-     * 
-     * @param context
-     * @param gp
-     */
     public IndicativeRadioGroup(Context context, RadioGroup gp) {
         super(context);
         mRadioGroup = gp;
+        initAttributesFromCode();
         addRadioGp();
     }
 
-    private void initAttributes(Context context, AttributeSet attrs) {
+    private void initAttributesFromCode() {
+        setIndicator(R.drawable.indicativeradio_default_indicator);
+        setIndicatorMoveAnimationDuration(500);
+        setIndicatorRestoreAnimationDuration(1500);
+        setHideAnimation(R.anim.indicativeradio_hide);
+        setShowAnimation(R.anim.indicativeradio_show);
+    }
+
+    private void initAttributesFromXml(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndicativeRadioGroup);
 
         int n = a.getIndexCount();
@@ -145,16 +142,16 @@ public class IndicativeRadioGroup extends RelativeLayout {
                 throw new RuntimeException(
                         "Your IndicativeRadioGroup must have a RadioGroup whose id attribute is "
                                 + "'me.fantouch.R.id.indivativeRadioGp'");
-        } else {
-            addView(mRadioGroup);
         }
+
         mRadioGroup.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 mRadioGroup.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 int indicatorWith = (int) (mRadioGroup.getWidth() * 1.0 / mRadioGroup
                         .getChildCount());
-                addIndicator(mIndicatorImgResId, indicatorWith);
+                int indicatorHeight = mRadioGroup.getHeight();
+                addIndicator(mIndicatorImgResId, indicatorWith, indicatorHeight);
             }
         });
 
@@ -165,15 +162,20 @@ public class IndicativeRadioGroup extends RelativeLayout {
                 moveIndicator();
             }
         });
+
+        // 如果mRadioGroup是从xml获得的,那么getParent==this,addView则重复了
+        if (mRadioGroup.getParent() != this) {
+            addView(mRadioGroup);
+        }
     }
 
-    private void addIndicator(int indicatorImgResId, int indicatorWith) {
+    private void addIndicator(int indicatorImgResId, int indicatorWith, int indicatorHeight) {
         mIndicatator = new ImageView(getContext());
         mIndicatator.setImageResource(indicatorImgResId);
         mIndicatator.setScaleType(ScaleType.FIT_XY);
 
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(indicatorWith,
-                LayoutParams.FILL_PARENT);
+                indicatorHeight);
 
         addView(mIndicatator, lp);
     }
@@ -207,14 +209,14 @@ public class IndicativeRadioGroup extends RelativeLayout {
     }
 
     private int getCheckedIdx() {
-        int idx = 0;
+        int checkedIdx = 0;
         for (int i = 0; i < mRadioGroup.getChildCount(); i++) {
             if (mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()) {
-                idx = i;
+                checkedIdx = i;
                 break;
             }
         }
-        return idx;
+        return checkedIdx;
     }
 
     /**
@@ -225,7 +227,7 @@ public class IndicativeRadioGroup extends RelativeLayout {
 
             if (mHideAnimation == null) {
                 IndicativeRadioGroup.this.setVisibility(View.GONE);
-                return;
+                return;// 没有动画,到这里完事了.
             }
 
             new AnimPerformer(IndicativeRadioGroup.this, mHideAnimation) {
@@ -243,12 +245,14 @@ public class IndicativeRadioGroup extends RelativeLayout {
      */
     public void show() {
         if (IndicativeRadioGroup.this.getVisibility() != View.VISIBLE) {
+
             IndicativeRadioGroup.this.setVisibility(View.VISIBLE);
 
             if (mShowAnimation == null) {
                 restoreIndicatatorPosition();
-                return;
+                return;// 没有动画,到这里完事了.
             }
+
             mShowAnimation.setFillAfter(true);
 
             new AnimPerformer(IndicativeRadioGroup.this, mShowAnimation) {
