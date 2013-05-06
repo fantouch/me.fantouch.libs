@@ -2,23 +2,25 @@ me.fantouch.libs
 ================
 
 **Android Library 工程,包含若干模块,帮助更便捷地进行 Android 开发**  
-**添加本 Library 依赖即可使用**  
-**最低支持 Android 2.1**
-  
-**含有以下模块**
+[查看Demo](https://github.com/fantouch/me.fantouch.Demo)
+
+**含有以下模块**  
+
 * [CrashHandler 崩溃处理器](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
 * [Logg 日志工具](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#logg)  
 * [UpdateHelper App自动更新助手](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
 * [AbsSendReportsService 文件后台发送服务](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
 
->本Library已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`,  
-你的工程请注意不需要重复包含了.
-  
-  
+>  
 ***
-*  如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页   
+* 你的工程添加本 Library 依赖即可使用
+* 最低支持 Android 2.1
+* 已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`, 你的工程不需要添加这两个包了  
+>  
+***
+如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页   
+***  
 
-***
 #CrashHandler崩溃处理模块
 * 崩溃了  
 ![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/6e307ff6-15bc-40ea-a3de-c0ebb05733af.jpg?resizeSmall&width=832)  
