@@ -1,11 +1,8 @@
 me.fantouch.libs
 ================
 
-**Android Library 工程,包含若干模块,帮助更便捷地进行 Android 开发**  
-[查看Demo](https://github.com/fantouch/me.fantouch.Demo)
-
-**含有以下模块**  
-
+###[查看Demo](https://github.com/fantouch/me.fantouch.Demo)
+**Android Library 工程,帮助更便捷地进行 Android 开发,含有以下模块:**
 * [CrashHandler 崩溃处理器](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#crashhandler)  
 * [Logg 日志工具](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#logg)  
 * [UpdateHelper App自动更新助手](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#updatehelper)  
@@ -13,8 +10,8 @@ me.fantouch.libs
 
 >  
 ***
-* 你的工程添加本 Library 依赖即可使用
 * 最低支持 Android 2.1
+* 你的工程添加本 Library 依赖即可使用
 * 已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`, 你的工程不需要添加这两个包了  
 >  
 ***
