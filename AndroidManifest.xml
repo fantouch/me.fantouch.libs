@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.fantouch.libs"
-    android:versionCode="10"
-    android:versionName="2.8" >
+    android:versionCode="1"
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -12,48 +12,5 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- CrashHandler弹出对话框 http://android.35g.tw/?p=191 -->
-
-    <application
-        android:name="me.fantouch.libs.crash.MyApplication"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
-        <activity
-            android:name="me.fantouch.libs.test.MainMenuActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="me.fantouch.libs.test.TestUpdateHelperActivity"
-            android:label="自动更新模块测试" >
-        </activity>
-        <activity
-            android:name="me.fantouch.libs.test.TestLogActivity"
-            android:label="Log,Elog对比测试" >
-        </activity>
-        <activity
-            android:name="me.fantouch.libs.test.TestCrashActivity"
-            android:label="测试崩溃处理模块" >
-        </activity>
-        <activity
-            android:name="me.fantouch.libs.test.TestIndicativeRadioGpActivity"
-            android:label="带游标的RadioGroup" >
-        </activity>
-        <activity
-            android:name="me.fantouch.libs.test.TestIndicativeRadioGpByCodeActivity"
-            android:label="带游标的RadioGroupByCode" >
-        </activity>
-        <activity
-            android:name="me.fantouch.libs.test.TestIOSTitleBarActivity"
-            android:label="IOS风格标题栏" >
-        </activity>
-
-        <service android:name="me.fantouch.libs.test.SendService" >
-        </service>
-    </application>
 
 </manifest>
