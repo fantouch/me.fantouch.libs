@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 带游标的RadioGroup -->
+    <declare-styleable name="IndicativeRadioGroup">
+        <!-- 游标图片资源id,默认淡蓝底部射灯效果 -->
+        <attr name="indicatorDrawable" format="reference|color"></attr>
+        <!-- 游标平移动画时长,单位毫秒,默认值500 -->
+        <attr name="indicatorMoveAnimationDuration" format="integer"></attr>
+        <!-- 恢复游标动画时长,单位毫秒,默认值1500 -->
+        <attr name="indicatorRestoreAnimationDuration" format="integer"></attr>
+        <!-- 隐藏此控件用的动画,默认底部底部平移渐隐退出 -->
+        <attr name="hideAnimation" format="reference"></attr>
+        <!-- 显示此控件用的动画,默认底部底部平移渐隐进入 -->
+        <attr name="showAnimation" format="reference"></attr>
+    </declare-styleable>
+</resources>

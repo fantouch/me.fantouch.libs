@@ -40,12 +40,16 @@
             android:label="测试崩溃处理模块" >
         </activity>
         <activity
-            android:name="me.fantouch.libs.test.TestIndicativeRadioGp"
+            android:name="me.fantouch.libs.test.TestIndicativeRadioGpActivity"
             android:label="带游标的RadioGroup" >
         </activity>
         <activity
-            android:name="me.fantouch.libs.test.TestIndicativeRadioGpByCode"
-            android:label="带游标的RadioGroup" >
+            android:name="me.fantouch.libs.test.TestIndicativeRadioGpByCodeActivity"
+            android:label="带游标的RadioGroupByCode" >
+        </activity>
+        <activity
+            android:name="me.fantouch.libs.test.TestIOSTitleBarActivity"
+            android:label="IOS风格标题栏" >
         </activity>
 
         <service android:name="me.fantouch.libs.test.SendService" >

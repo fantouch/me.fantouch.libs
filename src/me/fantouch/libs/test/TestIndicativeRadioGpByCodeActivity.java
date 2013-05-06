@@ -10,7 +10,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import me.fantouch.libs.R;
 import me.fantouch.libs.indicativeradio.IndicativeRadioGroup;
 
-public class TestIndicativeRadioGpByCode extends Activity {
+public class TestIndicativeRadioGpByCodeActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

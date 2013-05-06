@@ -30,9 +30,11 @@ public class MainMenuActivity extends Activity {
         } else if (id == R.id.crash) {
             startActivity(new Intent(this, TestCrashActivity.class));
         } else if (id == R.id.indicativeRadioGp) {
-            startActivity(new Intent(this, TestIndicativeRadioGp.class));
+            startActivity(new Intent(this, TestIndicativeRadioGpActivity.class));
         } else if (id == R.id.indicativeRadioGpByCode) {
-            startActivity(new Intent(this, TestIndicativeRadioGpByCode.class));
+            startActivity(new Intent(this, TestIndicativeRadioGpByCodeActivity.class));
+        } else if (id == R.id.IOSTitleBar) {
+            startActivity(new Intent(this, TestIOSTitleBarActivity.class));
         }
 
     }

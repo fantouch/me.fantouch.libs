@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@id/iostitlebar_leftButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/iostitlebar_leftbtn_selector"
+      />
+
+    <Button
+        android:id="@id/iostitlebar_rightButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/iostitlebar_rightbtn_selector"
+        android:textSize="16.5sp"
+        />
+
+    <!-- 因为标题文字切换动画需要一进一出,所以要2个TextView对象轮流使用 -->
+    <TextView
+        android:id="@id/iostitlebar_titleTextViewA"
+        style="@style/iostitlebarTextView"
+         />
+
+    <TextView
+        android:id="@id/iostitlebar_titleTextViewB"
+        style="@style/iostitlebarTextView"
+      />
+
+</merge>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/indicativeradio_drawabletop_light" android:state_checked="true"/>
-    <item android:drawable="@drawable/indicativeradio_drawabletop_dim" android:state_checked="false"/>
+    <item android:drawable="@drawable/indicativeradio_drawabletop_highlight" android:state_checked="true"/>
+    <item android:drawable="@drawable/indicativeradio_drawabletop_default" android:state_checked="false"/>
 
 </selector>

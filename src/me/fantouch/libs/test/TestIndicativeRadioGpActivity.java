@@ -8,7 +8,7 @@ import android.view.View;
 import me.fantouch.libs.R;
 import me.fantouch.libs.indicativeradio.IndicativeRadioGroup;
 
-public class TestIndicativeRadioGp extends Activity {
+public class TestIndicativeRadioGpActivity extends Activity {
     private IndicativeRadioGroup mIndicativeRadioGroup;
 
     @Override

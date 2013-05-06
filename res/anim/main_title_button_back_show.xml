@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 模仿iphone标题栏返回键出现动画 -->
+<set xmlns:android="http://schemas.android.com/apk/res/android" >
+<!-- 从标题栏中间移到标题栏左侧 加速-减速-->
+    <translate
+        android:duration="@android:integer/config_longAnimTime"
+        android:fromXDelta="50%p"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:toXDelta="0%" />
+<!-- 逐渐可见 -->
+    <alpha
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:fromAlpha="0.0"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:toAlpha="1.0" />
+
+</set>

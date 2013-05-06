@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item type="id" name="indivativeRadioGp" />
+    <item type="id" name="iostitlebar_leftButton" />
+    <item type="id" name="iostitlebar_rightButton" />
+    <item type="id" name="iostitlebar_titleTextViewA" />
+    <item type="id" name="iostitlebar_titleTextViewB" />
 </resources>

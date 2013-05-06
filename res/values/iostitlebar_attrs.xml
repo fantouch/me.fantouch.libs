@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 仿iOS标题栏 -->
+    <declare-styleable name="IOSTitleBar">
+        <attr name="leftButton_background" format="reference"></attr>
+        <attr name="leftButton_maiginLeft" format="dimension"></attr>
+        <attr name="leftButton_textColor" format="color"></attr>
+        <attr name="leftButton_textSiz" format="dimension"></attr>
+        
+        <attr name="rightButton_background" format="reference"></attr>
+        <attr name="rightButton_maiginLeft" format="dimension"></attr>
+        <attr name="rightButton_textColor" format="color"></attr>
+        <attr name="rightButton_textSize" format="dimension"></attr>
+        
+        <attr name="titleText_color" format="color"></attr>
+        <attr name="titleText_size" format="dimension"></attr>
+        
+        <attr name="leftButton_visibility">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
+            <enum name="gone" value="2" />
+        </attr>
+        <attr name="rightButton_visibility">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
+            <enum name="gone" value="2" />
+        </attr>
+    </declare-styleable>
+
+</resources>
