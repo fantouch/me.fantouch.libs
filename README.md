@@ -12,21 +12,17 @@ me.fantouch.libs
 ***
 * 最低支持 Android 2.1
 * 你的工程添加本 Library 依赖即可使用
-* 已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`, 你的工程不需要添加这两个包了  
->  
-***
-如果 **图片不能显示** ,请[点击这个链接](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9),然后刷新本页   
-***  
+* 已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`, 你的工程不需要添加这两个包了 
 
 #CrashHandler崩溃处理模块
 * 崩溃了  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/6e307ff6-15bc-40ea-a3de-c0ebb05733af.jpg?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/5480d59146ab3d7fec2107b516c44037.jpeg)  
 
 * 崩溃报告自动存储在私有目录(/data/data/com.xxx)  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/6cd49d87-8abb-4fa9-9fe4-e33920ef7bb9.jpg?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/08ab259a92fbb0c8afb016c51b3de50e.jpeg)  
 
 * 服务器收到崩溃报告  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/214cb2a3-eb44-41c0-8527-6536c7c302e9.jpg?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/9900ce39b8c05b4e77f35a7563b8e997.jpeg)  
 
 ##CrashHandler需要权限
 ```xml  
@@ -113,10 +109,10 @@ me.fantouch.libs
 ***
 #Logg日志模块
 * `Logg.d("Hello~~");`  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/7e00b65b-6f07-4eaf-8693-92e9d42ec76d.png?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/09bbd9e15806c0aeef13625e104775a6.png)  
 
 * Eclipse Logcat输出  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/e8f2016e-e8e8-46e1-8b23-3a21442fa75b.jpg?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/fe3202fa2a8af116b6aa1437a5c7c0d3.jpeg)  
  * 简单,你只需关心要Log的 **内容**
  * 自动用类名填充 **TAG**
  * 自动Log **方法名**
@@ -170,13 +166,13 @@ Logg.sendReportFiles(getApplicationContext(), SendService.class);
 ***
 #UpdateHelper自动更新模块
 * 发现新版本  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/e2a05596-49c6-4df9-b637-b6db5223ecf3.png?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/853d918d939000a73b4d3cbb422e2bba.png)  
 
 * 后台下载  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/62c5e4a8-4836-4a04-9912-e58c02210c86.png?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/a717aa9705ffffad80a817bcec4ef5ac.png)  
 
 * 下载完成  
-![](https://www.evernote.com/shard/s25/sh/4d01bbd4-c5df-4d90-a617-29e5ead4bfc2/e18af5ee47804638bcf9c4251b9639a9/res/90d142ba-0d85-4371-b8f6-e418fac3e806.png?resizeSmall&width=832)  
+![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/513598280706d56010567fb445e6a502.png)  
 
 ##UpdateHelper需要权限  
 
