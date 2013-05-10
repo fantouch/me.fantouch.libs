@@ -9,20 +9,19 @@ me.fantouch.libs
 * [AbsSendReportsService 文件后台发送服务](https://github.com/fantouch/me.fantouch.libs/blob/master/README.md#abssendreportsservice)
 
 >  
-***
 * 最低支持 Android 2.1
 * 你的工程添加本 Library 依赖即可使用
 * 已包含 [afinal.jar](https://github.com/yangfuhai/afinal) 和 `android-support-v4.jar`, 你的工程不需要添加这两个包了 
 
 #CrashHandler崩溃处理模块
 * 崩溃了  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/5480d59146ab3d7fec2107b516c44037.jpeg)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/5480d59146ab3d7fec2107b516c44037.jpeg)  
 
 * 崩溃报告自动存储在私有目录(/data/data/com.xxx)  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/08ab259a92fbb0c8afb016c51b3de50e.jpeg)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/08ab259a92fbb0c8afb016c51b3de50e.jpeg)  
 
 * 服务器收到崩溃报告  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/9900ce39b8c05b4e77f35a7563b8e997.jpeg)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/9900ce39b8c05b4e77f35a7563b8e997.jpeg)  
 
 ##CrashHandler需要权限
 ```xml  
@@ -109,10 +108,10 @@ me.fantouch.libs
 ***
 #Logg日志模块
 * `Logg.d("Hello~~");`  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/09bbd9e15806c0aeef13625e104775a6.png)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/09bbd9e15806c0aeef13625e104775a6.png)  
 
 * Eclipse Logcat输出  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/fe3202fa2a8af116b6aa1437a5c7c0d3.jpeg)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/fe3202fa2a8af116b6aa1437a5c7c0d3.jpeg)  
  * 简单,你只需关心要Log的 **内容**
  * 自动用类名填充 **TAG**
  * 自动Log **方法名**
@@ -166,13 +165,13 @@ Logg.sendReportFiles(getApplicationContext(), SendService.class);
 ***
 #UpdateHelper自动更新模块
 * 发现新版本  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/853d918d939000a73b4d3cbb422e2bba.png)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/853d918d939000a73b4d3cbb422e2bba.png)  
 
 * 后台下载  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/a717aa9705ffffad80a817bcec4ef5ac.png)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/a717aa9705ffffad80a817bcec4ef5ac.png)  
 
 * 下载完成  
-![](http://www.fantouch.me/tofu/?/file/406392/2382938308/%2Ffantouch.Me/513598280706d56010567fb445e6a502.png)  
+![](http://fantouch1.duapp.com/?/file/406392/2382938308/%2Ffantouch.Me/513598280706d56010567fb445e6a502.png)  
 
 ##UpdateHelper需要权限  
 
