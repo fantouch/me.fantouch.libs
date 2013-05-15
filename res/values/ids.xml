@@ -5,4 +5,5 @@
     <item type="id" name="iostitlebar_rightButton" />
     <item type="id" name="iostitlebar_titleTextViewA" />
     <item type="id" name="iostitlebar_titleTextViewB" />
+    <item type="id" name="pager" />
 </resources>

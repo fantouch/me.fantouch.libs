@@ -4,7 +4,6 @@ package me.fantouch.libs.multiviewpager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
@@ -14,17 +13,25 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.util.Log;
 
+import net.tsz.afinal.FinalBitmap;
 import net.tsz.afinal.bitmap.core.BitmapDecoder;
 import net.tsz.afinal.bitmap.download.Downloader;
 import net.tsz.afinal.bitmap.download.SimpleHttpDownloader;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * 下载图片过程中为图片添加倒影的下载器
+ * <p>
+ * 实现了{@link net.tsz.afinal.bitmap.download.Downloader}接口,用于
+ * {@link FinalBitmap#configDownlader(Downloader)}
+ * 
+ * @author Fantouch
+ */
 public class RefImgDownloader implements Downloader {
     private static final String TAG = RefImgDownloader.class.getSimpleName();
 

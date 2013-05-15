@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PagerContainer">
+        <attr name="page_margin" format="dimension"></attr>
+        <attr name="page_width" format="dimension"></attr>
+        <attr name="page_height" format="dimension"></attr>
+    </declare-styleable>
+
+    <dimen name="default_page_margin">10dp</dimen>
+
+</resources>
