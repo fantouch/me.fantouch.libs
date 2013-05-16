@@ -153,11 +153,21 @@ public class ScrollAdv extends FrameLayout {
             }
         });
 
+    }
+
+    private void startHeartBeat() {
+        if (heartBeatThread == null || !heartBeatThread.isAlive()) {
+            heartBeatThread = new HeartBeatThread(remainDur, heartBeatHandler);
+            heartBeatThread.start();
+        }
+
+    }
+
+    private void stopHeartBeat() {
         if (heartBeatThread != null) {
             heartBeatThread.kill();
+            heartBeatThread = null;
         }
-        heartBeatThread = new HeartBeatThread(remainDur, heartBeatHandler);
-        heartBeatThread.start();
     }
 
     private final Handler heartBeatHandler = new Handler() {
@@ -195,10 +205,12 @@ public class ScrollAdv extends FrameLayout {
     }
 
     public void onPause() {
+        stopHeartBeat();
         ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onPause();
     }
 
     public void onResume() {
+        startHeartBeat();
         ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onResume();
     }
 
