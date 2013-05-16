@@ -2,23 +2,15 @@ package me.fantouch.libs.scrolladv;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable.Orientation;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import net.tsz.afinal.FinalBitmap;
 
 import me.fantouch.libs.R;
-import me.fantouch.libs.multiviewpager.RefImgDownloader;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -33,7 +25,8 @@ public class ScrollAdv extends FrameLayout {
     private LinearLayout mIndicatorContainer;
     private ImageView[] indicators;
     private OnItemClickListener mOnItemClickListener;
-    private List<String> mImgUrls;
+    private int lastSelectostion = 0;
+    private AutoInt autoInt;
     /**
      * 暂时不支持代码实例化
      * 
@@ -46,13 +39,13 @@ public class ScrollAdv extends FrameLayout {
     public ScrollAdv(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrsFromXML(context, attrs);
-        init(context);
+        initScrollAdv();
     }
 
     public ScrollAdv(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initAttrsFromXML(context, attrs);
-        init(context);
+        initScrollAdv();
     }
 
 
@@ -91,11 +84,12 @@ public class ScrollAdv extends FrameLayout {
 
     }
 
-    private void init(Context context) {
-        mViewPager = new ViewPager(context);
+    private void initScrollAdv() {
+        mViewPager = new ViewPager(getContext());
+        setFixedSpeedScroller(mViewPager, switchAnimDur);
         addView(mViewPager);
 
-        mIndicatorContainer = new LinearLayout(context);
+        mIndicatorContainer = new LinearLayout(getContext());
         mIndicatorContainer.setOrientation(LinearLayout.HORIZONTAL);
         FrameLayout.LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.RIGHT);
@@ -104,12 +98,13 @@ public class ScrollAdv extends FrameLayout {
         addView(mIndicatorContainer);
     }
 
-    private void drawIndicators(Context context, int indicatorCount) {
+
+    private void drawIndicators(int indicatorCount) {
         mIndicatorContainer.removeAllViews();
 
         indicators = new ImageView[indicatorCount];
         for (int i = 0; i < indicatorCount; i++) {
-            indicators[i] = new ImageView(context);
+            indicators[i] = new ImageView(getContext());
             if (i == 0) {
                 indicators[i].setImageResource(indicatorFocusedId);
             } else {
@@ -123,17 +118,47 @@ public class ScrollAdv extends FrameLayout {
         return mViewPager;
     }
 
-    public void setImgs(List<String> urlStrings) {
-        mImgUrls = urlStrings;
+    public void setImgs(final List<String> urlStrings) {
+        drawIndicators(urlStrings.size());
+        mViewPager.setAdapter(new ScrollAdvAdapter(getContext(), urlStrings));
+        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                autoInt = new AutoInt(0, urlStrings.size() - 1);
+                autoInt.set(position, position - lastSelectostion > 0 ? true : false);
+                lastSelectostion = position;
+
+                for (int i = 0; i < indicators.length; i++) {
+                    indicators[position]
+                            .setBackgroundResource(R.drawable.scrolladv_indicator_focused);
+                    if (position != i) {
+                        indicators[i]
+                                .setBackgroundResource(R.drawable.scrolladv_indicator_default);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
-    private void setFixedSpeedScroller(Context context, int duration) {
-        FixedSpeedScroller fixedSpeedScroller = new FixedSpeedScroller(context, duration);
+    private void setFixedSpeedScroller(ViewPager viewPager, int duration) {
+        FixedSpeedScroller fixedSpeedScroller = new FixedSpeedScroller(viewPager.getContext(),
+                duration);
         try {
             Field mScroller;
             mScroller = ViewPager.class.getDeclaredField("mScroller");
             mScroller.setAccessible(true);
-            mScroller.set(this, fixedSpeedScroller);
+            mScroller.set(viewPager, fixedSpeedScroller);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
@@ -151,50 +176,16 @@ public class ScrollAdv extends FrameLayout {
         mOnItemClickListener = l;
     }
 
-    private class MyPagerAdapter extends PagerAdapter {
-        private FinalBitmap fb;
-
-        public MyPagerAdapter(Context context) {
-            super();
-            initFinalBitmap(context);
-        }
-
-        private void initFinalBitmap(Context context) {
-            fb = FinalBitmap.create(context);
-            fb.configDownlader(new RefImgDownloader(context));
-            fb.configCompressFormat(Bitmap.CompressFormat.PNG);
-            fb.configLoadingImage(android.R.drawable.ic_menu_sort_by_size);
-            fb.configLoadfailImage(android.R.drawable.ic_menu_close_clear_cancel);
-            fb.configBitmapMaxWidth(getResources().getDisplayMetrics().widthPixels);
-            fb.configBitmapMaxHeight(getResources().getDisplayMetrics().heightPixels);
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-
-            ImageView imageView = new ImageView(getContext());
-            fb.display(imageView,
-                    "http://www.fantouch.me/imgs.demo.fantouch.me/img"
-                            + (position + 1) +
-                            ".jpg");
-
-            container.addView(imageView);
-            return imageView;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
-
-        @Override
-        public int getCount() {
-            return 22;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return (view == object);
-        }
+    public void onPause() {
+        ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onPause();
     }
+
+    public void onResume() {
+        ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onResume();
+    }
+
+    public void onDestroy() {
+        ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onDestroy();
+    }
+
 }

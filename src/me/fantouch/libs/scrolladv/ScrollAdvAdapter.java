@@ -11,11 +11,15 @@ import me.fantouch.libs.multiviewpager.RefImgDownloader;
 
 import net.tsz.afinal.FinalBitmap;
 
+import java.util.List;
+
 public class ScrollAdvAdapter extends PagerAdapter {
     private FinalBitmap fb;
+    private List<String> imgUrls;
 
-    public ScrollAdvAdapter(Context context) {
+    public ScrollAdvAdapter(Context context, List<String> imgUrls) {
         super();
+        this.imgUrls = imgUrls;
         initFinalBitmap(context);
     }
 
@@ -37,10 +41,7 @@ public class ScrollAdvAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
 
         ImageView imageView = new ImageView(container.getContext());
-        fb.display(imageView,
-                "http://www.fantouch.me/imgs.demo.fantouch.me/img"
-                        + (position + 1) +
-                        ".jpg");
+        fb.display(imageView, imgUrls.get(position));
 
         container.addView(imageView);
         return imageView;
@@ -53,7 +54,7 @@ public class ScrollAdvAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return 22;
+        return imgUrls.size();
     }
 
     @Override
