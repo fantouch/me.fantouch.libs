@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 轮播广告组件 -->
+    <declare-styleable name="ScrollAdv">
+
+        <!-- 广告停留时间,单位毫秒 -->
+        <attr name="remainDur" format="integer"></attr>
+        <!-- 广告切换动画时长,单位毫秒 -->
+        <attr name="switchAnimDur" format="integer"></attr>
+        <!-- 指示器,未聚焦 -->
+        <attr name="indicator_default" format="reference"></attr>
+        <!-- 指示器,聚焦 -->
+        <attr name="indicator_focused" format="reference"></attr>
+        <!-- 指示器与边缘的间距 -->
+        <attr name="indicator_margin" format="dimension"></attr>
+    </declare-styleable>
+    
+    <dimen name="indicator_default_margin">8dp</dimen>
+
+</resources>
