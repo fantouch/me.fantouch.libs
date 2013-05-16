@@ -8,5 +8,7 @@
     </declare-styleable>
 
     <dimen name="default_page_margin">10dp</dimen>
+    
+     <item type="id" name="pager" />
 
 </resources>

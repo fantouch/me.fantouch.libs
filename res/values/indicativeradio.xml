@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- 带游标的RadioGroup -->
     <declare-styleable name="IndicativeRadioGroup">
+
         <!-- 游标图片资源id,默认淡蓝底部射灯效果 -->
         <attr name="indicatorDrawable" format="reference|color"></attr>
         <!-- 游标平移动画时长,单位毫秒,默认值500 -->
@@ -13,4 +15,18 @@
         <!-- 显示此控件用的动画,默认底部底部平移渐隐进入 -->
         <attr name="showAnimation" format="reference"></attr>
     </declare-styleable>
+
+    <style name="IndicativeRadioGpBtn" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawableTop">@drawable/indicativeradio_default_radio_drawtop_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 </resources>

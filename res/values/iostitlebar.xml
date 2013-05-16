@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <item name="indivativeRadioGp" type="id"/>
+    <item name="iostitlebar_leftButton" type="id"/>
+    <item name="iostitlebar_rightButton" type="id"/>
+    <item name="iostitlebar_titleTextViewA" type="id"/>
+    <item name="iostitlebar_titleTextViewB" type="id"/>
+
     <!-- 仿iOS标题栏 -->
     <declare-styleable name="IOSTitleBar">
         <attr name="leftButton_background" format="reference"></attr>
         <attr name="leftButton_maiginLeft" format="dimension"></attr>
         <attr name="leftButton_textColor" format="color"></attr>
         <attr name="leftButton_textSiz" format="dimension"></attr>
-        
         <attr name="rightButton_background" format="reference"></attr>
         <attr name="rightButton_maiginLeft" format="dimension"></attr>
         <attr name="rightButton_textColor" format="color"></attr>
         <attr name="rightButton_textSize" format="dimension"></attr>
-        
         <attr name="titleText_color" format="color"></attr>
         <attr name="titleText_size" format="dimension"></attr>
-        
         <attr name="leftButton_visibility">
             <enum name="visible" value="0" />
             <enum name="invisible" value="1" />
@@ -27,5 +30,18 @@
             <enum name="gone" value="2" />
         </attr>
     </declare-styleable>
+
+    <style name="iostitlebarTextView">
+        <item name="android:gravity">center</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/iostitlebat_titletextview_color_selector</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_toLeftOf">@id/iostitlebar_rightButton</item>
+        <item name="android:layout_toRightOf">@id/iostitlebar_leftButton</item>
+    </style>
 
 </resources>
