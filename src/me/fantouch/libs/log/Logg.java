@@ -33,6 +33,12 @@ public class Logg extends BasicLog {
     private Logg() {
     }
 
+    public static void e() {
+        // TODO 可设置格式化
+        // TODO 抛弃数组形式
+        e(null);// FIXME 栈信息加深了一层了
+    }
+
     public static void e(String message) {
         if (ENABLE_LOGCAT || TO_FILE) {
             String[] infos = getTagAndAutoJumpFunctionText();
@@ -43,6 +49,10 @@ public class Logg extends BasicLog {
                 save(infos[0] + "." + infos[1] + infos[3] + " " + message);
             }
         }
+    }
+
+    public static void d() {
+        d(null);
     }
 
     public static void d(String message) {
