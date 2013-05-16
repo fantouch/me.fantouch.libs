@@ -2,6 +2,8 @@ package me.fantouch.libs.scrolladv;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
@@ -27,6 +29,7 @@ public class ScrollAdv extends FrameLayout {
     private OnItemClickListener mOnItemClickListener;
     private int lastSelectostion = 0;
     private AutoInt autoInt;
+    private HeartBeatThread heartBeatThread;
     /**
      * 暂时不支持代码实例化
      * 
@@ -120,21 +123,21 @@ public class ScrollAdv extends FrameLayout {
 
     public void setImgs(final List<String> urlStrings) {
         drawIndicators(urlStrings.size());
+        autoInt = new AutoInt(0, urlStrings.size() - 1);
         mViewPager.setAdapter(new ScrollAdvAdapter(getContext(), urlStrings));
         mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
-                autoInt = new AutoInt(0, urlStrings.size() - 1);
                 autoInt.set(position, position - lastSelectostion > 0 ? true : false);
                 lastSelectostion = position;
 
                 for (int i = 0; i < indicators.length; i++) {
                     indicators[position]
-                            .setBackgroundResource(R.drawable.scrolladv_indicator_focused);
+                            .setImageResource(R.drawable.scrolladv_indicator_focused);
                     if (position != i) {
                         indicators[i]
-                                .setBackgroundResource(R.drawable.scrolladv_indicator_default);
+                                .setImageResource(R.drawable.scrolladv_indicator_default);
                     }
                 }
 
@@ -149,7 +152,22 @@ public class ScrollAdv extends FrameLayout {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        if (heartBeatThread != null) {
+            heartBeatThread.kill();
+        }
+        heartBeatThread = new HeartBeatThread(remainDur, heartBeatHandler);
+        heartBeatThread.start();
     }
+
+    private final Handler heartBeatHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (mViewPager != null) {
+                mViewPager.setCurrentItem(autoInt.get());
+            }
+        }
+    };
 
     private void setFixedSpeedScroller(ViewPager viewPager, int duration) {
         FixedSpeedScroller fixedSpeedScroller = new FixedSpeedScroller(viewPager.getContext(),
