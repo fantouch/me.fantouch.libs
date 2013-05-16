@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -153,6 +155,25 @@ public class ScrollAdv extends FrameLayout {
             }
         });
 
+        mViewPager.setOnTouchListener(new OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                        stopHeartBeat();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        startHeartBeat();
+                        break;
+                    default:
+                        startHeartBeat();
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     private void startHeartBeat() {
