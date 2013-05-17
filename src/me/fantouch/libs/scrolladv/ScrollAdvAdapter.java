@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import me.fantouch.libs.multiviewpager.RefImgDownloader;
+import me.fantouch.libs.scrolladv.ScrollAdv.OnImgClickListener;
 
 import net.tsz.afinal.FinalBitmap;
 
@@ -16,10 +18,12 @@ import java.util.List;
 class ScrollAdvAdapter extends PagerAdapter {
     private FinalBitmap fb;
     private List<String> imgUrls;
+    private OnImgClickListener mOnPagerItemClickListener;
 
-    public ScrollAdvAdapter(Context context, List<String> imgUrls) {
+    public ScrollAdvAdapter(Context context, List<String> imgUrls, OnImgClickListener listener) {
         super();
         this.imgUrls = imgUrls;
+        this.mOnPagerItemClickListener = listener;
         initFinalBitmap(context);
     }
 
@@ -38,9 +42,18 @@ class ScrollAdvAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-
+    public Object instantiateItem(ViewGroup container, final int position) {
         ImageView imageView = new ImageView(container.getContext());
+        imageView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (mOnPagerItemClickListener != null) {
+                    mOnPagerItemClickListener.onImgClick(position);
+                }
+
+            }
+        });
         fb.display(imageView, imgUrls.get(position));
 
         container.addView(imageView);

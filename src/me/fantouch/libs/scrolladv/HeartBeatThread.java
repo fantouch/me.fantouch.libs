@@ -1,7 +1,6 @@
 package me.fantouch.libs.scrolladv;
 
 import android.os.Handler;
-import android.util.Log;
 
 class HeartBeatThread extends Thread {
     private boolean die = false;
@@ -27,11 +26,9 @@ class HeartBeatThread extends Thread {
                 e.printStackTrace();
             }
             if (!die) {// 如果睡眠过程没死,才发布心跳
-                Log.w(HeartBeatThread.class.getSimpleName(), "beat~");
                 heartBeatHandler.sendEmptyMessage(0);
             }
         }
-        Log.w(HeartBeatThread.class.getSimpleName(), "Has dead !!");
     };
 
 }

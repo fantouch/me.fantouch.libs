@@ -2,6 +2,7 @@ package me.fantouch.libs.scrolladv;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -15,20 +16,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import me.fantouch.libs.R;
+import me.fantouch.libs.log.Logg;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 public class ScrollAdv extends FrameLayout {
-    private int remainDur = 2000;
-    private int switchAnimDur = 1000;
+    private static final String TAG = ScrollAdv.class.getName();
+    private int remainDur = 500;
+    private int switchAnimDur = 300;
     private int indicatorMargin;
     private int indicatorDefaultId = R.drawable.scrolladv_indicator_default;
     private int indicatorFocusedId = R.drawable.scrolladv_indicator_focused;
     private ViewPager mViewPager;
     private LinearLayout mIndicatorContainer;
     private ImageView[] indicators;
-    private OnItemClickListener mOnItemClickListener;
     private int lastSelectostion = 0;
     private AutoInt autoInt;
     private HeartBeatThread heartBeatThread;
@@ -62,10 +64,10 @@ public class ScrollAdv extends FrameLayout {
                 int attr = a.getIndex(i);
                 switch (attr) {
                     case R.styleable.ScrollAdv_remainDur:
-                        remainDur = a.getInt(attr, 2000);
+                        remainDur = a.getInt(attr, remainDur);
                         break;
                     case R.styleable.ScrollAdv_switchAnimDur:
-                        switchAnimDur = a.getInt(attr, 1000);
+                        switchAnimDur = a.getInt(attr, switchAnimDur);
                         break;
                     case R.styleable.ScrollAdv_indicator_default:
                         indicatorDefaultId = a.getResourceId(attr,
@@ -90,6 +92,14 @@ public class ScrollAdv extends FrameLayout {
     }
 
     private void initScrollAdv() {
+        this.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Logg.d("");
+            }
+        });
+
         mViewPager = new ViewPager(getContext());
         setFixedSpeedScroller(mViewPager, switchAnimDur);
         addView(mViewPager);
@@ -123,10 +133,10 @@ public class ScrollAdv extends FrameLayout {
         return mViewPager;
     }
 
-    public void setImgs(final List<String> urlStrings) {
+    public void setImgs(final List<String> urlStrings, OnImgClickListener listener) {
         drawIndicators(urlStrings.size());
         autoInt = new AutoInt(0, urlStrings.size() - 1);
-        mViewPager.setAdapter(new ScrollAdvAdapter(getContext(), urlStrings));
+        mViewPager.setAdapter(new ScrollAdvAdapter(getContext(), urlStrings, listener));
         mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 
             @Override
@@ -217,12 +227,16 @@ public class ScrollAdv extends FrameLayout {
         }
     }
 
-    public interface OnItemClickListener {
-        public void OnItemClick(int postion);
+    public interface OnImgClickListener {
+        public void onImgClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener l) {
-        mOnItemClickListener = l;
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(TAG, lastSelectostion);
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        mViewPager.setCurrentItem(savedInstanceState.getInt(TAG, 0));
     }
 
     public void onPause() {
