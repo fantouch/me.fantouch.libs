@@ -33,7 +33,7 @@ class ScrollAdvAdapter extends PagerAdapter {
 
     private void initFinalBitmap(Context context) {
         fb = FinalBitmap.create(context);
-        fb.configDownlader(new RefImgDownloader(context));
+        // fb.configDownlader(new RefImgDownloader(context));//为图片增加倒影
         fb.configCompressFormat(Bitmap.CompressFormat.PNG);
         fb.configLoadingImage(android.R.drawable.stat_notify_sync);
         fb.configLoadfailImage(android.R.drawable.stat_notify_error);
