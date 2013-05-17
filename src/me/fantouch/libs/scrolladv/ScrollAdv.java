@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import me.fantouch.libs.R;
-import me.fantouch.libs.log.Logg;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -34,6 +33,7 @@ public class ScrollAdv extends FrameLayout {
     private int lastSelectostion = 0;
     private AutoInt autoInt;
     private HeartBeatThread heartBeatThread;
+
     /**
      * 暂时不支持代码实例化
      * 
@@ -55,7 +55,12 @@ public class ScrollAdv extends FrameLayout {
         initScrollAdv();
     }
 
-
+    /**
+     * 从布局文件获取属性
+     * 
+     * @param context
+     * @param attrs
+     */
     private void initAttrsFromXML(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScrollAdv);
         try {
@@ -92,18 +97,12 @@ public class ScrollAdv extends FrameLayout {
     }
 
     private void initScrollAdv() {
-        this.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Logg.d("");
-            }
-        });
-
+        // 实例化ViewPager
         mViewPager = new ViewPager(getContext());
         setFixedSpeedScroller(mViewPager, switchAnimDur);
         addView(mViewPager);
 
+        // 实例化指示器容器
         mIndicatorContainer = new LinearLayout(getContext());
         mIndicatorContainer.setOrientation(LinearLayout.HORIZONTAL);
         FrameLayout.LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -113,7 +112,11 @@ public class ScrollAdv extends FrameLayout {
         addView(mIndicatorContainer);
     }
 
-
+    /**
+     * 绘制指示器
+     * 
+     * @param indicatorCount 指示器个数
+     */
     private void drawIndicators(int indicatorCount) {
         mIndicatorContainer.removeAllViews();
 
@@ -133,40 +136,23 @@ public class ScrollAdv extends FrameLayout {
         return mViewPager;
     }
 
+    /**
+     * 设置广告内容
+     * 
+     * @param urlStrings 图片列表
+     * @param listener 图片点击监听器
+     */
     public void setImgs(final List<String> urlStrings, OnImgClickListener listener) {
         drawIndicators(urlStrings.size());
         autoInt = new AutoInt(0, urlStrings.size() - 1);
+        setupViewPager(urlStrings, listener);
+    }
+
+    private void setupViewPager(final List<String> urlStrings, OnImgClickListener listener) {
         mViewPager.setAdapter(new ScrollAdvAdapter(getContext(), urlStrings, listener));
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 
-            @Override
-            public void onPageSelected(int position) {
-                autoInt.set(position, position - lastSelectostion > 0 ? true : false);
-                lastSelectostion = position;
-
-                for (int i = 0; i < indicators.length; i++) {
-                    indicators[position]
-                            .setImageResource(R.drawable.scrolladv_indicator_focused);
-                    if (position != i) {
-                        indicators[i]
-                                .setImageResource(R.drawable.scrolladv_indicator_default);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
+        // 用户操作的时候停止页面自动切换
         mViewPager.setOnTouchListener(new OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -184,16 +170,47 @@ public class ScrollAdv extends FrameLayout {
                 return false;
             }
         });
+
+        // 监听页面切换,刷新指示器
+        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                autoInt.set(position, position - lastSelectostion > 0 ? true : false);// 刷新指示器记录,并根据是否已到达最值来设定步进方向
+                lastSelectostion = position;
+
+                for (int i = 0; i < indicators.length; i++) {
+                    indicators[position]
+                            .setImageResource(R.drawable.scrolladv_indicator_focused);
+                    if (position != i) {
+                        indicators[i]
+                                .setImageResource(R.drawable.scrolladv_indicator_default);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
+    /**
+     * 开始发布心跳事件
+     */
     private void startHeartBeat() {
         if (heartBeatThread == null || !heartBeatThread.isAlive()) {
             heartBeatThread = new HeartBeatThread(remainDur, heartBeatHandler);
             heartBeatThread.start();
         }
-
     }
 
+    /**
+     * 停止发布心跳事件
+     */
     private void stopHeartBeat() {
         if (heartBeatThread != null) {
             heartBeatThread.kill();
@@ -201,6 +218,9 @@ public class ScrollAdv extends FrameLayout {
         }
     }
 
+    /**
+     * 处理心跳事件的Handler,实现图片切换
+     */
     private final Handler heartBeatHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -210,6 +230,12 @@ public class ScrollAdv extends FrameLayout {
         }
     };
 
+    /**
+     * 设置图片切换动画时长
+     * 
+     * @param viewPager 需要设置切换动画时长的ViewPager
+     * @param duration 动画时长,单位毫秒
+     */
     private void setFixedSpeedScroller(ViewPager viewPager, int duration) {
         FixedSpeedScroller fixedSpeedScroller = new FixedSpeedScroller(viewPager.getContext(),
                 duration);
@@ -227,28 +253,48 @@ public class ScrollAdv extends FrameLayout {
         }
     }
 
+    /**
+     * 图片点击监听器
+     * 
+     * @author Fantouch
+     */
     public interface OnImgClickListener {
         public void onImgClick(int position);
     }
 
+    /**
+     * 请根据生命周期调用
+     */
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(TAG, lastSelectostion);
     }
 
+    /**
+     * 请根据生命周期调用
+     */
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         mViewPager.setCurrentItem(savedInstanceState.getInt(TAG, 0));
     }
 
+    /**
+     * 请根据生命周期调用
+     */
     public void onPause() {
         stopHeartBeat();
         ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onPause();
     }
 
+    /**
+     * 请根据生命周期调用
+     */
     public void onResume() {
         startHeartBeat();
         ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onResume();
     }
 
+    /**
+     * 请根据生命周期调用
+     */
     public void onDestroy() {
         ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onDestroy();
     }

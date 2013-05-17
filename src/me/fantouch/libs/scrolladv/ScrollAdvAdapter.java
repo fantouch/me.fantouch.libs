@@ -35,8 +35,8 @@ class ScrollAdvAdapter extends PagerAdapter {
         fb = FinalBitmap.create(context);
         fb.configDownlader(new RefImgDownloader(context));
         fb.configCompressFormat(Bitmap.CompressFormat.PNG);
-        fb.configLoadingImage(android.R.drawable.ic_menu_sort_by_size);
-        fb.configLoadfailImage(android.R.drawable.ic_menu_close_clear_cancel);
+        fb.configLoadingImage(android.R.drawable.stat_notify_sync);
+        fb.configLoadfailImage(android.R.drawable.stat_notify_error);
         fb.configBitmapMaxWidth(context.getResources().getDisplayMetrics().widthPixels);
         fb.configBitmapMaxHeight(context.getResources().getDisplayMetrics().heightPixels);
     }
