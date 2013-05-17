@@ -22,6 +22,8 @@ import java.util.List;
 
 public class ScrollAdv extends FrameLayout {
     private static final String TAG = ScrollAdv.class.getName();
+
+    /* Attributes */
     private int remainDur = 500;
     private int switchAnimDur = 300;
     private int indicatorMargin;
@@ -29,6 +31,8 @@ public class ScrollAdv extends FrameLayout {
     private int indicatorFocusedId = R.drawable.scrolladv_indicator_focused;
     private int loadingImgId = android.R.drawable.stat_notify_sync;
     private int loadFailImgId = android.R.drawable.stat_notify_error;
+    /* Attributes */
+
     private ViewPager mViewPager;
     private LinearLayout mIndicatorContainer;
     private ImageView[] indicators;
