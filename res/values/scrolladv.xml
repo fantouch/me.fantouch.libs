@@ -12,6 +12,10 @@
         <attr name="indicator_default" format="reference"></attr>
         <!-- 指示器,聚焦 -->
         <attr name="indicator_focused" format="reference"></attr>
+        <!-- 正在下载时显示的占位图片 -->
+        <attr name="loading_img" format="reference"></attr>
+        <!-- 下载失败时显示的占位图片 -->
+        <attr name="load_fail_img" format="reference"></attr>
         <!-- 指示器与边缘的间距 -->
         <attr name="indicator_margin" format="dimension"></attr>
     </declare-styleable>

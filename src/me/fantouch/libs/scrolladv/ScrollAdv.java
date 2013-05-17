@@ -27,6 +27,8 @@ public class ScrollAdv extends FrameLayout {
     private int indicatorMargin;
     private int indicatorDefaultId = R.drawable.scrolladv_indicator_default;
     private int indicatorFocusedId = R.drawable.scrolladv_indicator_focused;
+    private int loadingImgId = android.R.drawable.stat_notify_sync;
+    private int loadFailImgId = android.R.drawable.stat_notify_error;
     private ViewPager mViewPager;
     private LinearLayout mIndicatorContainer;
     private ImageView[] indicators;
@@ -85,6 +87,12 @@ public class ScrollAdv extends FrameLayout {
                     case R.styleable.ScrollAdv_indicator_margin:
                         indicatorMargin = a.getDimensionPixelSize(attr,
                                 R.dimen.indicator_default_margin);
+                        break;
+                    case R.styleable.ScrollAdv_loading_img:
+                        loadingImgId = a.getResourceId(attr, loadingImgId);
+                        break;
+                    case R.styleable.ScrollAdv_load_fail_img:
+                        loadFailImgId = a.getResourceId(attr, loadFailImgId);
                         break;
                 }
             }
@@ -149,7 +157,10 @@ public class ScrollAdv extends FrameLayout {
     }
 
     private void setupViewPager(final List<String> urlStrings, OnImgClickListener listener) {
-        mViewPager.setAdapter(new ScrollAdvAdapter(getContext(), urlStrings, listener));
+        ScrollAdvAdapter adapter = new ScrollAdvAdapter(getContext(), urlStrings, listener);
+        adapter.getFinalBitmap().configLoadingImage(loadingImgId);
+        adapter.getFinalBitmap().configLoadfailImage(loadFailImgId);
+        mViewPager.setAdapter(adapter);
 
         // 用户操作的时候停止页面自动切换
         mViewPager.setOnTouchListener(new OnTouchListener() {
