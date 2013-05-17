@@ -2,7 +2,7 @@ package me.fantouch.libs.scrolladv;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AutoInt {
+class AutoInt {
     private boolean willAdd = true;
     private int min = 0, max = 0;
     private AtomicInteger auto;

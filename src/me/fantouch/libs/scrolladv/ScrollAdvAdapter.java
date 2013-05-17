@@ -13,7 +13,7 @@ import net.tsz.afinal.FinalBitmap;
 
 import java.util.List;
 
-public class ScrollAdvAdapter extends PagerAdapter {
+class ScrollAdvAdapter extends PagerAdapter {
     private FinalBitmap fb;
     private List<String> imgUrls;
 

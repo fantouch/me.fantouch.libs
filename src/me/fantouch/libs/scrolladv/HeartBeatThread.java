@@ -3,7 +3,7 @@ package me.fantouch.libs.scrolladv;
 import android.os.Handler;
 import android.util.Log;
 
-public class HeartBeatThread extends Thread {
+class HeartBeatThread extends Thread {
     private boolean die = false;
     private int sleepDru;
     private Handler heartBeatHandler;
