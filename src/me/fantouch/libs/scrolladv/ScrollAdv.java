@@ -214,7 +214,7 @@ public class ScrollAdv extends FrameLayout {
      */
     private void startHeartBeat() {
         if (heartBeatThread == null || !heartBeatThread.isAlive()) {
-            heartBeatThread = new HeartBeatThread(remainDur, heartBeatHandler);
+            heartBeatThread = new HeartBeatThread(remainDur + switchAnimDur, heartBeatHandler);
             heartBeatThread.start();
         }
     }
