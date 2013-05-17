@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
@@ -53,6 +55,18 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
         initAttributesFromXml(context, attrs);
         init(context);
     }
+
+    /* 生命周期 */
+    private static final String TAG = PagerContainer.class.getName();
+
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(TAG, mPager.getCurrentItem());
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        mPager.setCurrentItem(savedInstanceState.getInt(TAG, 0));
+    }
+    /* 生命周期 */
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void init(Context context) {
@@ -136,6 +150,10 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
 
     public ViewPager getViewPager() {
         return mPager;
+    }
+
+    public void setAdapter(PagerAdapter adapter) {
+        mPager.setAdapter(adapter);
     }
 
     private Point mCenter = new Point();
