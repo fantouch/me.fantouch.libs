@@ -64,7 +64,9 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
     }
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mPager.setCurrentItem(savedInstanceState.getInt(TAG, 0));
+        if (savedInstanceState != null) {
+            mPager.setCurrentItem(savedInstanceState.getInt(TAG, 0));
+        }
     }
     /* 生命周期 */
 
@@ -90,7 +92,7 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
         mPager.setOnPageChangeListener(this);
         // Necessary or the pager will only have one extra page to show
         // make this at least however many pages you can see
-        mPager.setOffscreenPageLimit(calcOffscreenPageLimit(context));
+        mPager.setOffscreenPageLimit(calcOffscreenPageLimit());
         mPager.setLayoutParams(new FrameLayout.LayoutParams(pageWidth, pageHeight,
                 Gravity.CENTER_HORIZONTAL));
         this.addView(mPager);
@@ -106,12 +108,22 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
      * @param context
      * @return 需要缓存的Pager数量
      */
-    private int calcOffscreenPageLimit(Context context) {
+    private int calcOffscreenPageLimit() {
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int eachPageWidth = pageWidth + pageMargin;
         int pageCountCanBeSeen = (int) Math.ceil(screenWidth * 1.0f / eachPageWidth);
         Logg.i(pageCountCanBeSeen + "");
         return pageCountCanBeSeen;
+    }
+
+    /**
+     * 计算ViewPager的最佳CurrentItem,使左边不会留白
+     * 
+     * @return
+     */
+    public int calcBestCurrentItem() {
+        int pageCountCanBeSeen = calcOffscreenPageLimit();
+        return (int) Math.ceil(pageCountCanBeSeen * 1.0f / 2) - 1;// -1因为position由0开始
     }
 
     /**
@@ -154,6 +166,7 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
 
     public void setAdapter(PagerAdapter adapter) {
         mPager.setAdapter(adapter);
+        mPager.setCurrentItem(calcBestCurrentItem());
     }
 
     private Point mCenter = new Point();

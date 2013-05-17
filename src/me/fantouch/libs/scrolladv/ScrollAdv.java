@@ -288,7 +288,9 @@ public class ScrollAdv extends FrameLayout {
      * 请根据生命周期调用
      */
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
         mViewPager.setCurrentItem(savedInstanceState.getInt(TAG, 0));
+        }
     }
 
     /**

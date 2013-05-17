@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 import me.fantouch.libs.multiviewpager.RefImgDownloader;
 import me.fantouch.libs.scrolladv.ScrollAdv.OnImgClickListener;
 
 import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.bitmap.download.Downloader;
+import net.tsz.afinal.bitmap.download.SimpleHttpDownloader;
 
+import java.io.OutputStream;
 import java.util.List;
 
 class ScrollAdvAdapter extends PagerAdapter {
@@ -34,6 +38,7 @@ class ScrollAdvAdapter extends PagerAdapter {
     private void initFinalBitmap(Context context) {
         fb = FinalBitmap.create(context);
         // fb.configDownlader(new RefImgDownloader(context));//为图片增加倒影
+        fb.configDownlader(new SimpleHttpDownloader());// 默认下载器,无阴影
         fb.configCompressFormat(Bitmap.CompressFormat.PNG);
         fb.configLoadingImage(android.R.drawable.stat_notify_sync);
         fb.configLoadfailImage(android.R.drawable.stat_notify_error);
@@ -44,6 +49,7 @@ class ScrollAdvAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
         ImageView imageView = new ImageView(container.getContext());
+        imageView.setScaleType(ScaleType.FIT_XY);
         imageView.setOnClickListener(new OnClickListener() {
 
             @Override
