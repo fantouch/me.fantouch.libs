@@ -109,7 +109,7 @@ public class UpdateHelper {
             }
 
             @Override
-            public void onFailure(Throwable t, String strMsg) {
+            public void onFailure(Throwable t, int errorNum, String strMsg) {
                 if (t != null) {
                     t.printStackTrace();
                 }
@@ -204,7 +204,7 @@ public class UpdateHelper {
             }
 
             @Override
-            public void onFailure(Throwable t, String strMsg) {
+                    public void onFailure(Throwable t, int errorNum, String strMsg) {
                 if (t != null || strMsg != null) {
                     StringBuffer sb = new StringBuffer("下载失败");
                     if (strMsg != null) {
