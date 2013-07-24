@@ -62,12 +62,12 @@ public abstract class AbsSendReportsService extends Service {
                         stopSelf();
                     }
                 } else {
-                    onFailure(null, null);
+                    onFailure(null, 0, null);
                 }
             }
 
             @Override
-            public void onFailure(Throwable t, String strMsg) {
+            public void onFailure(Throwable t, int errorNum, String strMsg) {
                 stopSelf();
             }
         };
