@@ -211,7 +211,12 @@ public class L {
     }
 
     /**
+     * 根据配置文件决定Log行为
      * 文件示例如下<br>
+     * 
+     * <pre>
+     * /sdcard/log.cfg
+     * </pre>
      * 
      * <pre>
      * logcat=true
