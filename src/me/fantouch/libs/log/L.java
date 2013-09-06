@@ -31,7 +31,7 @@ import android.util.Log;
  * 使用示例:
  * 
  * <pre>
- * L.d(&quot;闪电狗&quot;);
+ * L.i(&quot;闪电狗&quot;);
  * 
  * LogCat输出:
  * 09-06 16:21:24.262: I/TestLogActivity$2.onClick(3212): 闪电狗
