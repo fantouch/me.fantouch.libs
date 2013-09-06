@@ -276,7 +276,7 @@ public class L {
     }
 
     /**
-     * 根据配置文件决定Log行为
+     * 根据配置文件决定是否输出Logcat,是否输出Log文件
      * 文件示例如下<br>
      * 
      * <pre>
@@ -419,10 +419,8 @@ public class L {
         if (!file.exists()) {
             new File(filePath).mkdirs();
             file.createNewFile();
-            return file;
-        } else {
-            return file;
         }
+        return file;
     }
 
     /**
