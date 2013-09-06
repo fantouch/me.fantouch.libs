@@ -20,11 +20,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
- * 可以记录行号,类名,方法名,可是实现双击转跳的Android Log增强工具<br>
+ * Log增强工具
+ * <p>
  * 你只需要填入想输出的内容,繁琐的东西自动帮你补全<br>
  * 1.自动用类名.方法名填充TAG<br>
  * 2.自动填充文件名,行号<br>
  * 3.Eclipse里面双击Logcat的输出,能转跳到Java文件相应行<br>
+ * 4.能读取配置文件决定是否输出Logcat和Log文件,无需重新编译工程.<br>
+ * 5.可以在配置文件配置密码,如果密码不符,则无法更改Log设置
  * <p>
  * 性能方面,耗时是{@link Log}的20倍
  * <p>
@@ -276,19 +279,38 @@ public class L {
     }
 
     /**
-     * 根据配置文件决定是否输出Logcat,是否输出Log文件
-     * 文件示例如下<br>
+     * 根据配置文件,决定是否输出Logcat,是否输出Log文件
+     * <p>
+     * 配置文件示例如下:<br>
      * 
      * <pre>
-     * /sdcard/log.cfg
-     * </pre>
+     * 路径: /sdcard/log.cfg
      * 
-     * <pre>
      * logcat=true
      * file=true
      * </pre>
      */
     public static void cfgFromFile(Context ctx) {
+        cfgFromFile(ctx, null);
+    }
+    
+    /**
+     * 根据配置文件,并验证密码,决定是否输出Logcat,是否输出Log文件
+     * <p>
+     * 配置文件示例如下:<br>
+     * 
+     * <pre>
+     * 路径: /sdcard/log.cfg
+     * 
+     * password=123456
+     * logcat=true
+     * file=true
+     * </pre>
+     * 
+     * @param password 密码,如果配置文件的与此不一致,则认为文件无效并忽略<br>
+     *            如果null,则跳过密码校验
+     */
+    public static void cfgFromFile(Context ctx, String password) {
         File cfgFile = null;
         try {
             cfgFile = getCfgFile();
@@ -297,12 +319,25 @@ public class L {
             return;
         }
 
+        creatDefaultCfgFileIfNecessary(password);
+
         BufferedReader in = null;
         try {
-            FileReader fr = new FileReader(cfgFile);
-            in = new BufferedReader(fr);
+            in = new BufferedReader(new FileReader(cfgFile));
             String line;
+            boolean isFirstLoop = true;
             while ((line = in.readLine()) != null) {
+
+                if (isFirstLoop && password != null) {// 需要验证密码
+                    if (!line.contains("password")) {// 没声明密码,中断
+                        Log.e(TAG, "Password NOT DEFINE in first line of config file");
+                        break;
+                    }
+                    if (line.split("=").length == 1 || !line.split("=")[1].equals(password)) {// 密码错误,中断
+                        Log.e(TAG, "Password in config file NOT CORRECT");
+                        break;
+                    }
+                }
 
                 if (line.contains("logcat")) {
                     if (line.split("=")[1].equals("true")) {
@@ -314,7 +349,7 @@ public class L {
                     }
                 }
 
-                if (line.contains("file")) {
+                if (line.contains("logfile")) {
                     if (line.split("=")[1].equals("true")) {
                         setLogToFileEnable(true, ctx);
                     } else if (line.split("=")[1].equals("false")) {
@@ -324,6 +359,8 @@ public class L {
                     }
                 }
 
+                isFirstLoop = false;
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -331,6 +368,39 @@ public class L {
             if (in != null) {
                 try {
                     in.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+
+    }
+
+    private static void creatDefaultCfgFileIfNecessary(String password) {
+        File file = null;
+        try {
+            file = getCfgFile();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            return;
+        }
+
+        if (file.length() > 0)
+            return;
+
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(file.getAbsolutePath(), false));
+            if (password != null) {
+                writer.append("password=\n");
+            }
+            writer.append("logcat=false\n");
+            writer.append("logfile=false\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
                 } catch (IOException e) {
                 }
             }
@@ -389,11 +459,9 @@ public class L {
             try {
                 if (writer != null) {
                     writer.close();
-                    writer = null;
                 }
                 if (reader != null) {
                     reader.close();
-                    reader = null;
                 }
             } catch (IOException e) {
             }
