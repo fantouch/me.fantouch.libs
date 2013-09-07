@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import me.fantouch.libs.reporter.AbsSendFileService;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
@@ -44,13 +44,11 @@ import android.util.Log;
  * 
  * @author Fantouch
  */
+@SuppressLint("SimpleDateFormat")
 public class L {
     private static final String TAG = L.class.getSimpleName();
 
-    /**
-     * 禁止实例化
-     */
-    private L() {
+    private L() {/* 禁止实例化 */
     }
 
     public static void v() {
@@ -133,6 +131,24 @@ public class L {
         log(Log.ERROR, msg, throwable);
     }
 
+    private static final String LOG_FILE_EXTENSION = ".log";
+
+    private static boolean isToLogcat = false;
+
+    private static boolean isToFile = false;
+
+    /**
+     * log文件路径
+     */
+    private static String filePath = "";
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static final SimpleDateFormat DATE_TIME_FORMAT =
+            new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss] ");
+
+    private static final String DATE_TIME_PLACEHOLDER = "                      ";
+
     private static void log(int logLevel, String msg, Throwable throwable) {
 
         if (isLogcatEnabled() || isLogToFileEnabled()) {
@@ -141,6 +157,7 @@ public class L {
             String tag = getTag(element);
             String codeLocation = getCodeLocation(element);
 
+            /** 根据内容处理打印排版 */
             if (msg == null && throwable == null) {
                 msg = "\t" + codeLocation;
             } else if (msg == null && throwable != null) {
@@ -187,12 +204,17 @@ public class L {
 
     }
 
+    /** @return 格式类似于: TestLogActivity.onClick */
     private static String getTag(StackTraceElement stackTraceElement) {
         return stackTraceElement.getClassName().substring(
                 stackTraceElement.getClassName().lastIndexOf(".") + 1) + "."
                 + stackTraceElement.getMethodName();
     }
 
+    /**
+     * @return 格式类似于: at me.fantouch.demo.TestLogActivity$2.onClick(TestLogActivity.java:47) <br>
+     *         这样的格式可以实现eclipse双击转跳到源码相应位置
+     */
     private static String getCodeLocation(StackTraceElement stackTraceElement) {
         return "at "
                 + stackTraceElement.getClassName()
@@ -205,24 +227,7 @@ public class L {
                 + ")";
     }
 
-    private static final String LOG_FILE_EXTENSION = ".log";
 
-    private static boolean isToLogcat = false;
-
-    private static boolean isToFile = false;
-
-    /**
-     * log文件路径
-     */
-    private static String filePath = "";
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm:ss ");
-
-    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat(
-            "[yyyy-MM-dd hh:mm:ss] ");
-    private static final String DATE_TIME_PLACEHOLDER = "                      ";
     /**
      * 设置是否把日志输出到Logcat,建议在Application里面设置
      * 
@@ -257,7 +262,7 @@ public class L {
      */
     public static void setLogToFileEnable(boolean enable, Context ctx) {
         if (enable) {
-            if (!isToFile) {// 启用保存到文件
+            if (!isToFile) {
                 isToFile = true;
                 filePath = ctx.getFilesDir().getAbsolutePath();
                 Log.v(TAG, "Save Log To File Enabled");
@@ -279,7 +284,7 @@ public class L {
     }
 
     /**
-     * 根据配置文件,决定是否输出Logcat,是否输出Log文件
+     * 根据配置文件,决定是否输出Logcat 和 Log文件
      * <p>
      * 配置文件示例如下:<br>
      * 
@@ -340,22 +345,30 @@ public class L {
                 }
 
                 if (line.contains("logcat")) {
-                    if (line.split("=")[1].equals("true")) {
-                        setLogcatEnable(true);
-                    } else if (line.split("=")[1].equals("false")) {
-                        setLogcatEnable(false);
-                    } else {
-                        Log.w(TAG, "wrong cfg file");
+                    try {
+                        if (line.split("=")[1].equals("true")) {
+                            setLogcatEnable(true);
+                        } else if (line.split("=")[1].equals("false")) {
+                            setLogcatEnable(false);
+                        } else {
+                            Log.e(TAG, "Illegal cfg file, logcat must a boolean value");
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        Log.e(TAG, "Illegal cfg file");
                     }
                 }
 
                 if (line.contains("logfile")) {
-                    if (line.split("=")[1].equals("true")) {
-                        setLogToFileEnable(true, ctx);
-                    } else if (line.split("=")[1].equals("false")) {
-                        setLogToFileEnable(false, ctx);
-                    } else {
-                        Log.w(TAG, "wrong cfg file");
+                    try {
+                        if (line.split("=")[1].equals("true")) {
+                            setLogToFileEnable(true, ctx);
+                        } else if (line.split("=")[1].equals("false")) {
+                            setLogToFileEnable(false, ctx);
+                        } else {
+                            Log.e(TAG, "Illegal cfg file, logfile must a boolean value");
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        Log.e(TAG, "Illegal cfg file");
                     }
                 }
 
@@ -407,12 +420,7 @@ public class L {
         }
     }
 
-    /**
-     * 保存String到文件
-     * 
-     * @param msg 需要记录的日志信息
-     * @TODO 异步操作
-     */
+    // TODO 异步操作
     private static void writeFile(String time, String tag, String msg) {
         File file = null;
         try {
@@ -481,7 +489,6 @@ public class L {
 
     /**
      * @return null if IOException
-     * @throws IOException
      */
     private static File creatFileIfNotExists(File file) throws IOException {
         if (!file.exists()) {
