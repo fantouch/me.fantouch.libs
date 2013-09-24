@@ -261,10 +261,23 @@ public class L {
      * @param enable 缺省false
      */
     public static void setLogToFileEnable(boolean enable, Context ctx) {
+        setLogToFileEnable(enable, ctx, null);
+    }
+
+    /**
+     * 设置是否保存日志到文件,并指定文件路径
+     * 
+     * @param enable 缺省false
+     */
+    public static void setLogToFileEnable(boolean enable, Context ctx, String path) {
         if (enable) {
             if (!isToFile) {
                 isToFile = true;
-                filePath = ctx.getFilesDir().getAbsolutePath();
+                if (TextUtils.isEmpty(path)) {
+                    filePath = path;
+                } else {
+                    filePath = ctx.getFilesDir().getAbsolutePath();
+                }
                 Log.v(TAG, "Save Log To File Enabled");
             } else {
                 Log.w(TAG, "Save To File Already Enabled");
@@ -310,6 +323,7 @@ public class L {
      * password=123456
      * logcat=true
      * file=true
+     * saveLogFileToSD=true
      * </pre>
      * 
      * @param password 密码,如果配置文件的与此不一致,则认为文件无效并忽略<br>
@@ -366,6 +380,21 @@ public class L {
                             setLogToFileEnable(false, ctx);
                         } else {
                             Log.e(TAG, "Illegal cfg file, logfile must a boolean value");
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        Log.e(TAG, "Illegal cfg file");
+                    }
+                }
+
+                if (line.contains("saveLogFileToSD")) {
+                    try {
+                        if (line.split("=")[1].equals("true")) {
+                            setLogToFileEnable(true, ctx, Environment.getExternalStorageDirectory()
+                                    .getAbsolutePath());
+                        } else if (line.split("=")[1].equals("false")) {
+                            setLogToFileEnable(false, ctx);
+                        } else {
+                            Log.e(TAG, "Illegal cfg file, saveLogFileToSD must a boolean value");
                         }
                     } catch (IndexOutOfBoundsException e) {
                         Log.e(TAG, "Illegal cfg file");
