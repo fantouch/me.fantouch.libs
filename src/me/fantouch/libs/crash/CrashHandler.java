@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
-import me.fantouch.libs.reporter.AbsSendReportsService;
+import me.fantouch.libs.reporter.AbsSendFileService;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -56,7 +56,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param ctx
      * @param sendService 用户自行实现的发送服务
      */
-    public void init(Context ctx, Class<? extends AbsSendReportsService> sendService) {
+    public void init(Context ctx, Class<? extends AbsSendFileService> sendService) {
         mContext = ctx;
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
@@ -69,13 +69,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * 
      * @param sendService
      */
-    private void sendLastReport(Class<? extends AbsSendReportsService> sendService) {
+    private void sendLastReport(Class<? extends AbsSendFileService> sendService) {
         if (sendService == null)
             return;
         Intent intent = new Intent(mContext, sendService);
-        intent.putExtra(AbsSendReportsService.INTENT_DIR, mContext.getFilesDir()
+        intent.putExtra(AbsSendFileService.INTENT_DIR, mContext.getFilesDir()
                 .getAbsolutePath());
-        intent.putExtra(AbsSendReportsService.INTENT_EXTENSION, CRASH_REPORTER_EXTENSION);
+        intent.putExtra(AbsSendFileService.INTENT_EXTENSION, CRASH_REPORTER_EXTENSION);
         mContext.startService(intent);
     }
 
@@ -115,6 +115,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
         System.exit(0);
     }
 
+    /**
+     * 弹出异常说明对话框<br>
+     * 使用系统级别的对话框
+     * 需要权限 {@link WindowManager.LayoutParams.TYPE_SYSTEM_ALERT}
+     * <p>
+     * See <a href="http://android.35g.tw/?p=191">http://android.35g.tw/?p=191</a>
+     */
     private AlertDialog showExceptionDialog() {
         ProgressBar pb = new ProgressBar(mContext, null,
                 android.R.attr.progressBarStyleInverse);
@@ -128,7 +135,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
         AlertDialog dialog = builder.create();
 
         // <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-        // http://android.35g.tw/?p=191
         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         dialog.show();
         return dialog;

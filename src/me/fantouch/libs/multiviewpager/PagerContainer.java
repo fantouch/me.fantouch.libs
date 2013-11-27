@@ -1,5 +1,6 @@
 package me.fantouch.libs.multiviewpager;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,9 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import me.fantouch.libs.R;
-import me.fantouch.libs.log.Logg;
+import me.fantouch.libs.log.L;
 
 /**
  * PagerContainer: A layout that displays a ViewPager with its children that are outside
@@ -70,7 +70,7 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
     }
     /* 生命周期 */
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @SuppressLint("NewApi")
     private void init(Context context) {
         // Disable clipping of children so non-selected pages are visible
         setClipChildren(false);
@@ -79,7 +79,7 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
         // You need to set this value here if using hardware acceleration in an
         // application targeted at these releases.
         if (Build.VERSION.SDK_INT >= 11) {
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            setLayerType(1/* View.LAYER_TYPE_SOFTWARE */, null);
         }
 
         // 添加ViewPager
@@ -112,7 +112,7 @@ public class PagerContainer extends FrameLayout implements ViewPager.OnPageChang
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int eachPageWidth = pageWidth + pageMargin;
         int pageCountCanBeSeen = (int) Math.ceil(screenWidth * 1.0f / eachPageWidth);
-        Logg.i(pageCountCanBeSeen + "");
+        L.d(pageCountCanBeSeen + "");
         return pageCountCanBeSeen;
     }
 

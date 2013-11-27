@@ -16,11 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * 后台发送崩溃报告服务,请不要忘记在AndroidManifest.xml里面注册
+ * 后台发送文件服务,记得在AndroidManifest.xml里面注册
  * 
  * @author Fantouch
  */
-public abstract class AbsSendReportsService extends Service {
+public abstract class AbsSendFileService extends Service {
     public static final String INTENT_BROADCAST = "me.fantouch.libs.reporter.INTENT_BROADCAST";
     public static final String INTENT_DIR = "me.fantouch.libs.reporter.INTENT_DIR";
     public static final String INTENT_EXTENSION = "me.fantouch.libs.reporter.INTENT_EXTENSION";
@@ -28,7 +28,7 @@ public abstract class AbsSendReportsService extends Service {
     private static final String NETWORK_TEST_HOST = "http://www.baidu.com";
     private static final String NETWORK_TEST_HOST_KEYWORD = "baidu.com";
 
-    private static final String TAG = AbsSendReportsService.class.getSimpleName();
+    private static final String TAG = AbsSendFileService.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -56,8 +56,8 @@ public abstract class AbsSendReportsService extends Service {
                     File zipFile = zipReports(reportsDir, reportExtension);
                     if (zipFile != null) {
                         // 发送报告
-                        sendZipReportsToServer(zipFile, new NotificationHelper(
-                                AbsSendReportsService.this));
+                        sendToServer(zipFile, new NotificationHelper(
+                                AbsSendFileService.this));
                     } else {
                         stopSelf();
                     }
@@ -159,11 +159,11 @@ public abstract class AbsSendReportsService extends Service {
      * <p>
      * <li>操作通知栏(可选):<br>
      * 更新进度{@link NotificationHelper#refreshProgress(float)}<br>
-     * 发送完毕{@link NotificationHelper#onSendFinish(AbsSendReportsService)}
+     * 发送完毕{@link NotificationHelper#onSendFinish(AbsSendFileService)}
      * 
      * @param reportFiles 你要发送的文件已经被打包成zip文件了
      * @param notification
      */
-    public abstract void sendZipReportsToServer(File reportsZip,
+    public abstract void sendToServer(File reportsZip,
             NotificationHelper notification);
 }

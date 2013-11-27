@@ -1,6 +1,20 @@
 
 package me.fantouch.libs.multiviewpager;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.bitmap.core.BitmapDecoder;
+import net.tsz.afinal.bitmap.download.Downloader;
+import net.tsz.afinal.bitmap.download.SimpleDownloader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -13,17 +27,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
 import android.util.Log;
 
-import net.tsz.afinal.FinalBitmap;
-import net.tsz.afinal.bitmap.core.BitmapDecoder;
-import net.tsz.afinal.bitmap.download.Downloader;
-import net.tsz.afinal.bitmap.download.SimpleHttpDownloader;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 /**
  * 下载图片过程中为图片添加倒影的下载器
  * <p>
@@ -35,60 +38,72 @@ import java.io.OutputStream;
 public class RefImgDownloader implements Downloader {
     private static final String TAG = RefImgDownloader.class.getSimpleName();
 
-    private SimpleHttpDownloader simpleHttpDownloader = new SimpleHttpDownloader();
-    private String cacheDir;
-    private int downloadedImgMaxWidth, downloadedImgMaxHeight;
+    private SimpleDownloader mSimpleHttpDownloader;
+    private String mCacheDir;
+    private int mMaxWidth, mMaxHeight;
 
     public RefImgDownloader(Context context) {
-        cacheDir = context.getCacheDir().getAbsolutePath();
-        downloadedImgMaxWidth = context.getResources().getDisplayMetrics().widthPixels;
-        downloadedImgMaxHeight = context.getResources().getDisplayMetrics().heightPixels;
+        mSimpleHttpDownloader = new SimpleDownloader();
+        mCacheDir = context.getCacheDir().getAbsolutePath();
+        mMaxWidth = context.getResources().getDisplayMetrics().widthPixels;
+        mMaxHeight = context.getResources().getDisplayMetrics().heightPixels;
     }
+
 
     @Override
-    public boolean downloadToLocalStreamByUrl(String urlString, OutputStream outputStream) {
+    public byte[] download(String urlString) {
         Log.d(TAG, "download:" + urlString);
 
-        // 通过SimpleHttpDownloader把图片下载到本地
-        File tempFile = new File(cacheDir, "tempImg");
-
-        if (tempFile.exists()) {
-            tempFile.delete();
+        // 创建缓存文件
+        File origFile = null;
+        try {
+            origFile = new File(mCacheDir, MD5Util.getStringMD5String(urlString) + "origFile.jpg");
+            if (origFile.exists())
+                origFile.delete();
+            origFile.getParentFile().mkdirs();
+            origFile.createNewFile();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            return null;
         }
 
+        // 下载图片到缓冲文件
         try {
-            tempFile.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        try {
-            OutputStream tempFileOutStrm = new FileOutputStream(tempFile);
-            simpleHttpDownloader.downloadToLocalStreamByUrl(urlString, tempFileOutStrm);
+            OutputStream tempFileOutStrm = new FileOutputStream(origFile);
+            tempFileOutStrm.write(mSimpleHttpDownloader.download(urlString));
+            tempFileOutStrm.flush();
+            tempFileOutStrm.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return false;
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
+
         // 创建倒影图片并返回
         try {
-            Bitmap resizedBmp = BitmapDecoder.decodeSampledBitmapFromFile(
-                    tempFile.getAbsolutePath(),
-                    downloadedImgMaxWidth, downloadedImgMaxHeight);
+            FileInputStream inputStream = new FileInputStream(origFile);
+            Bitmap resizedBmp = BitmapDecoder.decodeSampledBitmapFromDescriptor(
+                    inputStream.getFD(),
+                    mMaxWidth, mMaxHeight);
+            inputStream.close();
+            origFile.delete();
+
             if (resizedBmp != null) {
                 Bitmap refBmp = drawReflection(resizedBmp);
-                refBmp.compress(Bitmap.CompressFormat.PNG, 80, outputStream);// 返回倒影图片到outputStream
-                outputStream.close();
-                refBmp.recycle();
-                tempFile.delete();
-                return true;
-            } else
-                return false;
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                refBmp.compress(Bitmap.CompressFormat.PNG, 80, baos);// 返回倒影图片到outputStream
+                return baos.toByteArray();
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
+
 
     /**
      * @param originalImage 方法返回的时候,会被回收(originalImage.recycle(); )
@@ -140,4 +155,5 @@ public class RefImgDownloader implements Downloader {
 
         return bitmapWithReflection;
     }
+
 }

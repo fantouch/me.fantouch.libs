@@ -1,10 +1,16 @@
 package me.fantouch.libs.scrolladv;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
+import net.tsz.afinal.FinalBitmap;
+import me.fantouch.libs.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
@@ -15,12 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import me.fantouch.libs.R;
-
-import java.lang.reflect.Field;
-import java.util.List;
-
-public class ScrollAdv extends FrameLayout {
+public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
     private static final String TAG = ScrollAdv.class.getName();
 
     /* Attributes */
@@ -31,6 +32,11 @@ public class ScrollAdv extends FrameLayout {
     private int indicatorFocusedId = R.drawable.scrolladv_indicator_focused;
     private int loadingImgId = android.R.drawable.stat_notify_sync;
     private int loadFailImgId = android.R.drawable.stat_notify_error;
+    private int indicator_position = 0;// 0:left, 1:center, 2:right
+    public static final int INDICATOR_POSITION_LEFT = 0;
+    public static final int INDICATOR_POSITION_CENTER = 1;
+    public static final int INDICATOR_POSITION_RIGHT = 2;
+
     /* Attributes */
 
     private ViewPager mViewPager;
@@ -98,6 +104,9 @@ public class ScrollAdv extends FrameLayout {
                     case R.styleable.ScrollAdv_load_fail_img:
                         loadFailImgId = a.getResourceId(attr, loadFailImgId);
                         break;
+                    case R.styleable.ScrollAdv_indicator_position:
+                        indicator_position = a.getInt(attr, 0);
+                        break;
                 }
             }
         } catch (Exception e) {
@@ -117,10 +126,28 @@ public class ScrollAdv extends FrameLayout {
         // 实例化指示器容器
         mIndicatorContainer = new LinearLayout(getContext());
         mIndicatorContainer.setOrientation(LinearLayout.HORIZONTAL);
-        FrameLayout.LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.RIGHT);
+
+        FrameLayout.LayoutParams lp = null;
+        switch (indicator_position) {
+            case INDICATOR_POSITION_LEFT:
+                lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.LEFT);
+                break;
+            case INDICATOR_POSITION_CENTER:
+                lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                break;
+            case INDICATOR_POSITION_RIGHT:
+                lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.RIGHT);
+                break;
+
+            default:
+                break;
+        }
         lp.setMargins(indicatorMargin, indicatorMargin, indicatorMargin, indicatorMargin);
         mIndicatorContainer.setLayoutParams(lp);
+
         addView(mIndicatorContainer);
     }
 
@@ -160,10 +187,67 @@ public class ScrollAdv extends FrameLayout {
         setupViewPager(urlStrings, listener);
     }
 
+    public void setImgs(OnImgClickListener listener, final List<Integer> resIds) {
+        drawIndicators(resIds.size());
+        autoInt = new AutoInt(0, resIds.size() - 1);
+        setupViewPager(listener, resIds);
+    }
+
     private void setupViewPager(final List<String> urlStrings, OnImgClickListener listener) {
-        ScrollAdvAdapter adapter = new ScrollAdvAdapter(getContext(), urlStrings, listener);
-        adapter.getFinalBitmap().configLoadingImage(loadingImgId);
-        adapter.getFinalBitmap().configLoadfailImage(loadFailImgId);
+        ScrollAdvFinalBitmapAdapter adapter = new ScrollAdvFinalBitmapAdapter(getContext(), urlStrings, listener);
+        adapter.configLoadingImage(loadingImgId);
+        adapter.configLoadfailImage(loadFailImgId);
+        mViewPager.setAdapter(adapter);
+
+        // 用户操作的时候停止页面自动切换
+        mViewPager.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                        stopHeartBeat();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        startHeartBeat();
+                        break;
+                    default:
+                        startHeartBeat();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        // 监听页面切换,刷新指示器
+        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                autoInt.set(position, position - lastSelectostion > 0 ? true : false);// 刷新指示器记录,并根据是否已到达最值来设定步进方向
+                lastSelectostion = position;
+
+                for (int i = 0; i < indicators.length; i++) {
+                    indicators[position]
+                            .setImageResource(R.drawable.scrolladv_indicator_focused);
+                    if (position != i) {
+                        indicators[i]
+                                .setImageResource(R.drawable.scrolladv_indicator_default);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void setupViewPager(OnImgClickListener listener, final List<Integer> resIds) {
+        PagerAdapter adapter = new ScrollAdvResIdAdapter(getContext(), resIds, listener);
         mViewPager.setAdapter(adapter);
 
         // 用户操作的时候停止页面自动切换
@@ -214,7 +298,7 @@ public class ScrollAdv extends FrameLayout {
     }
 
     /**
-     * 开始发布心跳事件
+     * 开始心跳
      */
     private void startHeartBeat() {
         if (heartBeatThread == null || !heartBeatThread.isAlive()) {
@@ -224,7 +308,7 @@ public class ScrollAdv extends FrameLayout {
     }
 
     /**
-     * 停止发布心跳事件
+     * 停止心跳
      */
     private void stopHeartBeat() {
         if (heartBeatThread != null) {
@@ -280,6 +364,7 @@ public class ScrollAdv extends FrameLayout {
     /**
      * 请根据生命周期调用
      */
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(TAG, lastSelectostion);
     }
@@ -287,6 +372,7 @@ public class ScrollAdv extends FrameLayout {
     /**
      * 请根据生命周期调用
      */
+    @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
         mViewPager.setCurrentItem(savedInstanceState.getInt(TAG, 0));
@@ -296,24 +382,33 @@ public class ScrollAdv extends FrameLayout {
     /**
      * 请根据生命周期调用
      */
+    @Override
     public void onPause() {
         stopHeartBeat();
-        ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onPause();
+        if (mViewPager.getAdapter() instanceof LifeCycleInterface) {
+            ((LifeCycleInterface) mViewPager.getAdapter()).onPause();
+        }
     }
 
     /**
      * 请根据生命周期调用
      */
+    @Override
     public void onResume() {
         startHeartBeat();
-        ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onResume();
+        if (mViewPager.getAdapter() instanceof LifeCycleInterface) {
+            ((LifeCycleInterface) mViewPager.getAdapter()).onResume();
+        }
     }
 
     /**
      * 请根据生命周期调用
      */
+    @Override
     public void onDestroy() {
-        ((ScrollAdvAdapter) mViewPager.getAdapter()).getFinalBitmap().onDestroy();
+        if (mViewPager.getAdapter() instanceof LifeCycleInterface) {
+            ((LifeCycleInterface) mViewPager.getAdapter()).onDestroy();
+        }
     }
 
 }

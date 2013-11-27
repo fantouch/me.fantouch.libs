@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:gravity="center_vertical"
-                android:text="下载更新"
+                android:text="下载"
                 android:textColor="#666"
                 android:textSize="16sp" />
 
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:gravity="center_vertical"
-                android:text="100"
+                android:text="0"
                 android:textColor="#0c0"
                 android:textSize="16sp" />
 

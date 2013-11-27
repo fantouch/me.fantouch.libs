@@ -172,22 +172,27 @@ public class L {
                 switch (logLevel) {
                     case Log.VERBOSE:
                         Log.v(tag, msg, throwable);
+                        // com.readystatesoftware.notificationlog.Log.v(tag, msg, throwable);
                         break;
 
                     case Log.INFO:
                         Log.i(tag, msg, throwable);
+                        // com.readystatesoftware.notificationlog.Log.i(tag, msg, throwable);
                         break;
 
                     case Log.DEBUG:
                         Log.d(tag, msg, throwable);
+                        // com.readystatesoftware.notificationlog.Log.d(tag, msg, throwable);
                         break;
 
                     case Log.WARN:
                         Log.w(tag, msg, throwable);
+                        // com.readystatesoftware.notificationlog.Log.w(tag, msg, throwable);
                         break;
 
                     case Log.ERROR:
                         Log.e(tag, msg, throwable);
+                        // com.readystatesoftware.notificationlog.Log.e(tag, msg, throwable);
                         break;
 
                     default:
@@ -233,10 +238,11 @@ public class L {
      * 
      * @param enable 缺省false
      */
-    public static void setLogcatEnable(boolean enable) {
+    public static void setLogcatEnable(Context ctx, boolean enable) {
         if (enable) {
             if (!isToLogcat) {
                 isToLogcat = true;
+                // com.readystatesoftware.notificationlog.Log.initialize(ctx);
                 Log.v(TAG, "Logcat Enabled");
             } else {
                 Log.w(TAG, "Logcat Already Enabled ");
@@ -244,6 +250,7 @@ public class L {
         } else {
             if (isToLogcat) {
                 isToLogcat = false;
+                // com.readystatesoftware.notificationlog.Log.setNotificationsEnabled(false);
                 Log.v(TAG, "Logcat Disabled");
             } else {
                 Log.w(TAG, "Logcat Already Disabled");
@@ -273,7 +280,7 @@ public class L {
         if (enable) {
             if (!isToFile) {
                 isToFile = true;
-                if (TextUtils.isEmpty(path)) {
+                if (!TextUtils.isEmpty(path)) {
                     filePath = path;
                 } else {
                     filePath = ctx.getFilesDir().getAbsolutePath();
@@ -361,9 +368,9 @@ public class L {
                 if (line.contains("logcat")) {
                     try {
                         if (line.split("=")[1].equals("true")) {
-                            setLogcatEnable(true);
+                            setLogcatEnable(ctx, true);
                         } else if (line.split("=")[1].equals("false")) {
-                            setLogcatEnable(false);
+                            setLogcatEnable(ctx, false);
                         } else {
                             Log.e(TAG, "Illegal cfg file, logcat must a boolean value");
                         }

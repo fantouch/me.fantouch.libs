@@ -60,7 +60,7 @@ public class NotificationHelper {
      * Toast.makeText(mContext, &quot;发送完毕&quot;, Toast.LENGTH_SHORT).show();
      * </pre>
      */
-    public void onSendFinish(AbsSendReportsService service) {
+    public void onSendFinish(AbsSendFileService service) {
         mNotificationManager.cancel(1);
         service.stopSelf();
         Toast.makeText(mContext, "发送完毕", Toast.LENGTH_SHORT).show();

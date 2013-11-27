@@ -18,6 +18,12 @@
         <attr name="load_fail_img" format="reference"></attr>
         <!-- 指示器与边缘的间距 -->
         <attr name="indicator_margin" format="dimension"></attr>
+        <!-- 指示器位置 -->
+        <attr name="indicator_position">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
     </declare-styleable>
     
     <dimen name="indicator_default_margin">8dp</dimen>
