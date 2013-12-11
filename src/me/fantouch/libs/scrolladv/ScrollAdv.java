@@ -323,7 +323,7 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
     private final Handler heartBeatHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (mViewPager != null) {
+            if (mViewPager != null && autoInt != null) {
                 mViewPager.setCurrentItem(autoInt.get());
             }
         }
