@@ -159,11 +159,14 @@ public class L {
 
             /** 根据内容处理打印排版 */
             if (msg == null && throwable == null) {
-                msg = "\t" + codeLocation;
+                msg = tag + " => " + codeLocation;
             } else if (msg == null && throwable != null) {
                 msg = "";
             } else if (msg != null && throwable == null) {
-                msg = msg + "\n\t" + codeLocation;
+                if (TextUtils.isEmpty(msg)) {
+                    msg = "\"\"";
+                }
+                msg = msg + " => " + codeLocation;
             } else if (msg != null && throwable != null) {
                 // Nothing
             }
@@ -213,7 +216,7 @@ public class L {
     private static String getTag(StackTraceElement stackTraceElement) {
         return stackTraceElement.getClassName().substring(
                 stackTraceElement.getClassName().lastIndexOf(".") + 1) + "."
-                + stackTraceElement.getMethodName();
+                + stackTraceElement.getMethodName() + "()";
     }
 
     /**
