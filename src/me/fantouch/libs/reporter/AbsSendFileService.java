@@ -1,19 +1,19 @@
 
 package me.fantouch.libs.reporter;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-import android.text.TextUtils;
-import android.util.Log;
-
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxCallBack;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Build;
+import android.os.IBinder;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * 后台发送文件服务,记得在AndroidManifest.xml里面注册
@@ -87,9 +87,13 @@ public abstract class AbsSendFileService extends Service {
         // 压缩文件
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd#hh.mm.ss");
         String time = timeFormat.format(new Date(System.currentTimeMillis()));
+
         String deviceId = new DeviceUuidFactory(this).getDeviceUuid().toString();
-        final String ZIP_PATH = getFilesDir().getAbsolutePath()
-                + File.separator + deviceId + reportExtension + "@" + time + ".zip";
+        final String ZIP_PATH = getFilesDir().getAbsolutePath() + File.separator
+                + Build.BRAND + "."
+                + Build.MODEL + "."
+                + deviceId
+                + reportExtension + "@" + time + ".zip";
         ZipCompressor zipCompressor = new ZipCompressor(ZIP_PATH);
         zipCompressor.compress(crFilePaths);
         File zipFile = new File(ZIP_PATH);
