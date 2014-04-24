@@ -3,7 +3,6 @@ package me.fantouch.libs.scrolladv;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import net.tsz.afinal.FinalBitmap;
 import me.fantouch.libs.R;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -48,7 +47,7 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
 
     /**
      * 暂时不支持代码实例化
-     * 
+     *
      * @param context
      */
     private ScrollAdv(Context context) {
@@ -69,7 +68,7 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
 
     /**
      * 从布局文件获取属性
-     * 
+     *
      * @param context
      * @param attrs
      */
@@ -153,7 +152,7 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
 
     /**
      * 绘制指示器
-     * 
+     *
      * @param indicatorCount 指示器个数
      */
     private void drawIndicators(int indicatorCount) {
@@ -177,7 +176,7 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
 
     /**
      * 设置广告内容
-     * 
+     *
      * @param urlStrings 图片列表
      * @param listener 图片点击监听器
      */
@@ -317,6 +316,11 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
         }
     }
 
+    public void setIndicatorPosition(int position) {
+        indicator_position = position;
+        initScrollAdv();
+    }
+
     /**
      * 处理心跳事件的Handler,实现图片切换
      */
@@ -331,7 +335,7 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
 
     /**
      * 设置图片切换动画时长
-     * 
+     *
      * @param viewPager 需要设置切换动画时长的ViewPager
      * @param duration 动画时长,单位毫秒
      */
@@ -354,7 +358,7 @@ public class ScrollAdv extends FrameLayout implements LifeCycleInterface {
 
     /**
      * 图片点击监听器
-     * 
+     *
      * @author Fantouch
      */
     public interface OnImgClickListener {
